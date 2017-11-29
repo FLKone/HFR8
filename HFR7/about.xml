@@ -1,0 +1,76 @@
+﻿<root>
+  HFR7 #CURRENTVERSION
+  HFR pour Windows Phone 7.8
+  par Docteur G
+  Karmarina Applications karmarinapp@gmail.com
+
+  Merci aux aux utilisateurs de cette appli sans qui elle ne serait rien !
+
+  Un GRAND merci à tous les donateurs ;) :
+    kikou2419
+    etolian
+    Magic-Sim
+    Je@nb
+    Gropich
+    Constellation06
+    dada051
+    almamida
+    HipiPeep
+    alriad
+    carbon38
+    doum
+    drbeckman
+    charangoboy
+    Tolor
+    DDreaper
+    eklundh
+    FLo14
+    Vindev_HELL
+    Cheinz
+
+  CHANGELOG #CURRENTVERSION
+  Bug fixés
+  - L'edit ne fonctionnait plus
+  Nouvelle fonction
+  - Vibration quand un topic est chargé (désactivable)
+
+  CHANGELOG v2.6
+  Bugs fixés
+  - Certains topics plantaient (caractères spéciaux dans le titre)
+  - Certains users n'arrivaient pas à se connecter.
+  - Lors de la perte de la connexion, poster un message faisait crasher l'appli.
+
+  CHANGELOG v2.5
+  Bugs fixés :
+  - Dans certaines situations, les topics épinglés ne fonctionnaient pas.
+  - Augmentation de la sensibilié du swipe.
+
+  CHANGELOG v2.5
+  Améliorations :
+  - Réorganisation de l’affichage des posts.
+  - Swipe pour changer de page dans les sujets.
+  - Navigation entre les citations d’une page.
+  - Rafraichissement de l'avatar via un clic long.
+  - Recherche intratopic.
+  - Meilleur support du mode paysage.
+  - Meilleure gestion des multiquotes.
+  - Wiki smileys dans les MP.
+
+  Bugs fixés :
+  - Les balises codes et spoiler s’affichent correctement.
+  - Le bouton du smiley « :o » fonctionne.
+  - En cliquant sur une tile de sujet, on pouvait tomber sur une ancienne version du sujet.
+  - Dans certains cas, une édition de message devenait une réponse.
+  - Un clic vers HFRrehost ou les smileys puis sur le bouton back faisait planter l’appli.
+  - Parfois, les sujets étaient téléchargés 2 fois.
+  - Les images dans les MP ne s’affichaient pas correctement.
+  - Dans certaines situations, un message était posté deux fois.
+  - Plusieurs clics sur le bouton actualiser de la liste des favoris induisaient des bugs d’affichage.
+  - Les nouveaux MP étaient notifiés toutes les demi-heures jusqu’à ce qu’ils soient lus.
+  - Des boutons de changement de page apparaissaient lors des multiquote.
+  - L’appli plantait à l’ouverture de certains liens.
+
+
+  Un grand merci à tous les participants du topic HFR7 pour leurs conseils avisés !
+  Si vous aimez cette appli, notez-la dans le Marketplace (et mettez 5 étoiles :o)
+</root>

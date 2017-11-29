@@ -1,0 +1,220 @@
+﻿<phone:PhoneApplicationPage 
+    Name="ListTopicPage"
+    x:Class="HFR7.ListTopics"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:conv="clr-namespace:HFR7.HFRClasses"
+    xmlns:local="clr-namespace:HFR7"
+    local:TiltEffect.IsTiltEnabled="True"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="PortraitOrLandscape" Orientation="Portrait"
+    mc:Ignorable="d" d:DesignHeight="696" d:DesignWidth="480"
+    shell:SystemTray.IsVisible="True" Loaded="PhoneApplicationPage_Loaded">
+
+    <toolkit:TransitionService.NavigationOutTransition>
+        <toolkit:NavigationOutTransition>
+            <toolkit:NavigationOutTransition.Backward>
+                <toolkit:TurnstileTransition Mode="BackwardOut"/>
+            </toolkit:NavigationOutTransition.Backward>
+            <toolkit:NavigationOutTransition.Forward>
+                <toolkit:TurnstileTransition Mode="ForwardOut"/>
+            </toolkit:NavigationOutTransition.Forward>
+        </toolkit:NavigationOutTransition>
+    </toolkit:TransitionService.NavigationOutTransition>
+    <phone:PhoneApplicationPage.Resources>
+        <conv:String2ImageSource x:Key="String2ImageSource" />
+
+        <Style x:Key="HyperlinkButtonStyle1" TargetType="HyperlinkButton">
+            <Setter Property="Foreground" Value="{StaticResource PhoneForegroundBrush}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="FontSize" Value="28"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="HyperlinkButton">
+                        <Border Background="Transparent">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="MouseOver"/>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" To="0.5" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="TextElement"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="TextElement">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneDisabledBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Border Background="{TemplateBinding Background}" Margin="{StaticResource PhoneHorizontalMargin}" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter x:Name="TextElement" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </Border>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!-- The template for the list header. This will scroll as a part of the list. -->
+
+        <DataTemplate x:Key="itemTemplate">
+            <StackPanel Margin="3,0,0,14">
+                <toolkit:ContextMenuService.ContextMenu>
+                    <toolkit:ContextMenu IsZoomEnabled="False" >
+                        <toolkit:MenuItem Header="aller à la première page" Click="GoNormFirstPageClick" />
+                        <toolkit:MenuItem Header="aller à la dernière page" Click="GoNormLastPageClick" />
+                    </toolkit:ContextMenu>
+                </toolkit:ContextMenuService.ContextMenu>
+                <HyperlinkButton Margin="0,0,0,0" Style="{StaticResource HyperlinkButtonStyle1}" 
+                                     NavigateUri="{Binding TopicUri}" HorizontalAlignment="Left" 
+                                     Foreground="{StaticResource PhoneForegroundBrush}">
+                    <HyperlinkButton.Content>
+                        <StackPanel>
+                            <TextBlock Text="{Binding TopicName}" FontSize="27" />
+                            <TextBlock Text="{Binding TopicLastPost}" 
+                                       HorizontalAlignment="Left" 
+                                       Foreground="{StaticResource PhoneSubtleBrush}"
+                                       FontSize="{StaticResource PhoneFontSizeNormal}"
+                                       FontFamily="{StaticResource PhoneFontFamilyNormal}"
+                                       />
+                        </StackPanel>
+                    </HyperlinkButton.Content>
+                </HyperlinkButton>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="groupHeaderTemplate">
+            <TextBlock Text="{Binding Key}" FontSize="47" 
+                       FontFamily="{StaticResource PhoneFontFamilySemiLight}" 
+                       Foreground="#ff8f0b" 
+                       Margin="12,5,0,1" VerticalAlignment="Center" />
+        </DataTemplate>
+
+        
+        <!--<DataTemplate x:Key="drapItemTemplate">
+            <StackPanel Margin="3,0,0,14">
+                <toolkit:ContextMenuService.ContextMenu>
+                    <toolkit:ContextMenu IsZoomEnabled="False" >
+                        <toolkit:MenuItem Header="épingler à l'écran d'accueil" Click="PinTopicClickFav" />
+                        <toolkit:MenuItem Header="aller à la première page" Click="GoFavFirstPageClick" />
+                        <toolkit:MenuItem Header="aller à la dernière page" Click="GoFavLastPageClick" />                    
+                    </toolkit:ContextMenu>
+                </toolkit:ContextMenuService.ContextMenu>
+                <HyperlinkButton Margin="0,0,0,0" Style="{StaticResource HyperlinkButtonStyle1}" 
+                                     NavigateUri="{Binding TopicUriFav}" HorizontalAlignment="Left" 
+                                     Foreground="{StaticResource PhoneForegroundBrush}">
+                    <HyperlinkButton.Content>
+                        <StackPanel>
+                            <TextBlock Text="{Binding TopicNameFav}" FontSize="27" />
+                            <TextBlock Text="{Binding TopicLastPost}" 
+                                       HorizontalAlignment="Left" 
+                                       Foreground="{StaticResource PhoneSubtleBrush}"
+                                       FontSize="{StaticResource PhoneFontSizeNormal}"
+                                       FontFamily="{StaticResource PhoneFontFamilyNormal}"
+                                       />
+                        </StackPanel>
+                    </HyperlinkButton.Content>
+                </HyperlinkButton>
+            </StackPanel>
+        </DataTemplate>-->
+
+        <DataTemplate x:Key="drapItemTemplate">
+            <StackPanel Margin="3,0,0,10">
+                <toolkit:ContextMenuService.ContextMenu>
+                    <toolkit:ContextMenu IsZoomEnabled="False">
+                        <toolkit:MenuItem Header="épingler à l'écran d'accueil" Click="PinTopicClickFav" />
+                        <toolkit:MenuItem Header="aller à la première page" Click="GoFavFirstPageClick" />
+                        <toolkit:MenuItem Header="aller à la dernière page" Click="GoFavLastPageClick" />
+                    </toolkit:ContextMenu>
+                </toolkit:ContextMenuService.ContextMenu>
+                <HyperlinkButton Margin="0,0,0,0" Style="{StaticResource HyperlinkButtonStyle1}" 
+                                     NavigateUri="{Binding TopicUriFav}" HorizontalAlignment="Left" 
+                                     Foreground="{StaticResource PhoneForegroundBrush}">
+                    <HyperlinkButton.Content>
+                        <StackPanel>
+                            <TextBlock Text="{Binding TopicNameFav}" TextTrimming="WordEllipsis" FontSize="27" />
+                            <TextBlock Text="{Binding TopicLastPost}" 
+                                       HorizontalAlignment="Left" 
+                                       Foreground="{StaticResource PhoneSubtleBrush}"
+                                       FontSize="{StaticResource PhoneFontSizeNormal}"
+                                       FontFamily="{StaticResource PhoneFontFamilyNormal}"
+                                       />
+                        </StackPanel>
+                    </HyperlinkButton.Content>
+                </HyperlinkButton>
+            </StackPanel>
+        </DataTemplate>
+
+    </phone:PhoneApplicationPage.Resources>
+    <Grid x:Name="LayoutRoot">
+        <Grid.Background>
+            <ImageBrush x:Name="backgroundImageBrush" Stretch="None"/>
+        </Grid.Background>
+        <!--Contrôle Pivot -->
+    <controls:Pivot Margin="0,-20,0,0" 
+                        Visibility="Visible" 
+                        Name="topicsPivot"
+                        Title=" "
+                        SelectionChanged="topicsPivot_SelectionChanged">
+            <controls:PivotItem Header="sujets">
+                    <!--<phone:LongListSelector x:Name="topicsList" 
+            ItemTemplate="{StaticResource itemTemplate}"
+            GroupHeaderTemplate="{StaticResource groupHeaderTemplate}"
+            GroupViewOpened="topicsGroup_GroupViewOpened"
+            GroupViewClosing="topicsGroup_GroupViewClosing"
+                                              ScrollingCompleted="topicsList_ScrollingCompleted" >-->
+                    <phone:LongListSelector x:Name="topicsList" 
+            ItemTemplate="{StaticResource itemTemplate}"
+            GroupHeaderTemplate="{StaticResource groupHeaderTemplate}"
+            LayoutMode="List"
+            HideEmptyGroups ="true" 
+            IsGroupingEnabled="true">
+                        <!--<toolkit:LongListSelector.GroupItemsPanel>
+                        <ItemsPanelTemplate>
+                            <toolkit:WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </toolkit:LongListSelector.GroupItemsPanel>-->
+                </phone:LongListSelector>
+            </controls:PivotItem>
+        
+            <controls:PivotItem Header="favoris">
+                <phone:LongListSelector x:Name="drapList" 
+                                          Background="Transparent"
+                                          ItemTemplate="{StaticResource drapItemTemplate}"
+                                          GroupHeaderTemplate="{StaticResource groupHeaderTemplate}"
+                                                    LayoutMode="List"
+            HideEmptyGroups ="true" 
+            IsGroupingEnabled="true">
+                    <!--<toolkit:LongListSelector.GroupItemsPanel>
+                        <ItemsPanelTemplate>
+                            <toolkit:WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </toolkit:LongListSelector.GroupItemsPanel>-->
+                </phone:LongListSelector>
+            </controls:PivotItem>
+        
+    </controls:Pivot>
+    </Grid>
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True" >
+            <shell:ApplicationBarIconButton x:Name="appbar_refresh" IconUri="/Images/ImagesTopics/refresh.png" Text="Rafraîchir" Click="appbar_refresh_Click"/>
+            <shell:ApplicationBarIconButton x:Name="appbar_lastpage" IconUri="/Images/ImagesTopics/previous.png" Text="Page précédente" Click="appbar_lastpage_Click"/>
+            <shell:ApplicationBarIconButton x:Name="appbar_nextpage" IconUri="/Images/ImagesTopics/next.png" Text="Page suivante" Click="appbar_nextpage_Click"/>
+            <shell:ApplicationBar.MenuItems>
+            </shell:ApplicationBar.MenuItems>
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
+
+</phone:PhoneApplicationPage>

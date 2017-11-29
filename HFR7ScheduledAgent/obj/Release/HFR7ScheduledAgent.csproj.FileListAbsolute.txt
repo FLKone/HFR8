@@ -1,0 +1,14 @@
+D:\Documents\Visual Studio 2010\Projects\HFR7\7.1\HFR7ScheduledAgent\Bin\Release\HFR7ScheduledAgent.dll
+D:\Documents\Visual Studio 2010\Projects\HFR7\7.1\HFR7ScheduledAgent\Bin\Release\HFR7ScheduledAgent.pdb
+D:\Documents\Visual Studio 2010\Projects\HFR7\7.1\HFR7ScheduledAgent\obj\Release\HFR7ScheduledAgent.csprojResolveAssemblyReference.cache
+D:\Documents\Visual Studio 2010\Projects\HFR7\7.1\HFR7ScheduledAgent\obj\Release\HFR7ScheduledAgent.dll
+D:\Documents\Visual Studio 2010\Projects\HFR7\7.1\HFR7ScheduledAgent\obj\Release\HFR7ScheduledAgent.pdb
+D:\Documents\Visual Studio 2010\Projects\HFR8\HFR7ScheduledAgent\Bin\Release\HFR7ScheduledAgent.dll
+D:\Documents\Visual Studio 2010\Projects\HFR8\HFR7ScheduledAgent\Bin\Release\HFR7ScheduledAgent.pdb
+D:\Documents\Visual Studio 2010\Projects\HFR8\HFR7ScheduledAgent\obj\Release\HFR7ScheduledAgent.csprojResolveAssemblyReference.cache
+D:\Documents\Visual Studio 2010\Projects\HFR8\HFR7ScheduledAgent\obj\Release\HFR7ScheduledAgent.dll
+D:\Documents\Visual Studio 2010\Projects\HFR8\HFR7ScheduledAgent\obj\Release\HFR7ScheduledAgent.pdb
+Z:\Desktop\Projects\HFR8\HFR7ScheduledAgent\Bin\Release\HFR7ScheduledAgent.dll
+Z:\Desktop\Projects\HFR8\HFR7ScheduledAgent\Bin\Release\HFR7ScheduledAgent.pdb
+Z:\Desktop\Projects\HFR8\HFR7ScheduledAgent\obj\Release\HFR7ScheduledAgent.dll
+Z:\Desktop\Projects\HFR8\HFR7ScheduledAgent\obj\Release\HFR7ScheduledAgent.pdb

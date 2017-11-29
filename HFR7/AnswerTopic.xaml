@@ -1,0 +1,197 @@
+﻿<phone:PhoneApplicationPage 
+    Name="AnswerTopicPage"
+    x:Class="HFR7.AnswerTopic"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:jayway="clr-namespace:Jayway.Controls;assembly=Jayway.Controls"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="PortraitOrLandscape" Orientation="Portrait"
+    OrientationChanged="AnswerTopicPage_OrientationChanged"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    mc:Ignorable="d" d:DesignHeight="696" d:DesignWidth="480"
+    shell:SystemTray.IsVisible="True"
+    Loaded="PhoneApplicationPage_Loaded"
+    Unloaded="AnswerTopicPage_Unloaded">
+    <toolkit:TransitionService.NavigationInTransition>
+        <toolkit:NavigationInTransition>
+            <toolkit:NavigationInTransition.Backward>
+                <toolkit:TurnstileTransition Mode="BackwardIn"/>
+            </toolkit:NavigationInTransition.Backward>
+            <toolkit:NavigationInTransition.Forward>
+                <toolkit:TurnstileTransition Mode="ForwardIn"/>
+            </toolkit:NavigationInTransition.Forward>
+        </toolkit:NavigationInTransition>
+    </toolkit:TransitionService.NavigationInTransition>
+    <toolkit:TransitionService.NavigationOutTransition>
+        <toolkit:NavigationOutTransition>
+            <toolkit:NavigationOutTransition.Backward>
+                <toolkit:TurnstileTransition Mode="BackwardOut"/>
+            </toolkit:NavigationOutTransition.Backward>
+            <toolkit:NavigationOutTransition.Forward>
+                <toolkit:TurnstileTransition Mode="ForwardOut"/>
+            </toolkit:NavigationOutTransition.Forward>
+        </toolkit:NavigationOutTransition>
+    </toolkit:TransitionService.NavigationOutTransition>
+    <phone:PhoneApplicationPage.Resources>
+        <Style x:Key="RedButton" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Rectangle Fill="Red" Margin="0" Width="96" Height="96" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="BlueButton" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Rectangle Fill="Blue" Margin="0" Width="96" Height="96" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="GreenButton" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Rectangle Fill="Green" Margin="0" Width="96" Height="96" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="PurpleButton" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Rectangle Fill="Purple" Margin="0" Width="96" Height="96" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="OrangeButton" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Rectangle Fill="Orange" Margin="0" Width="96" Height="96" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="GrayButton" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Rectangle Fill="Gray" Margin="0" Width="96" Height="96" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </phone:PhoneApplicationPage.Resources>
+    <!--<ScrollViewer Height="696" VerticalScrollBarVisibility="Visible" Margin="0,0,0,0">
+        <ScrollViewer.Background>
+            <ImageBrush ImageSource="Images/Background_Portrait.jpg" Stretch="None"/>
+        </ScrollViewer.Background>-->
+
+        <!--LayoutRoot est la grille racine où tout le contenu de la page est placé-->
+    <Grid x:Name="LayoutRoot">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.Background>
+            <ImageBrush x:Name="backgroundImageBrush" Stretch="None"/>
+        </Grid.Background>
+        <toolkit:PerformanceProgressBar Visibility="Collapsed" Name="progressBar" Width="400" IsIndeterminate="True" VerticalAlignment="Top" />
+        <TextBlock Name="globalTextblock" Visibility="Collapsed" Width="400" FontSize="17" Text="" TextAlignment="Center" VerticalAlignment="top" HorizontalAlignment="Center" />
+
+        <!--TitlePanel contient le nom de l'application et le titre de la page-->
+        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,10,0,0">
+            <TextBlock x:Name="PageTitle" Text="votre réponse" Margin="9,-7,0,15" FontSize="40" />
+        </StackPanel>
+
+        <!--ContentPanel - placez tout contenu supplémentaire ici-->
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,-25,12,0"  VerticalAlignment="Top" Opacity="1">
+            <ScrollViewer Name="answerScrollViewer" VerticalScrollBarVisibility="Visible" Margin="0,0,0,0" 
+                          Height="600">
+                <StackPanel>
+                    <Button Content="afficher le message cité" Height="65" FontSize="18" Name="showQuoteButton" Visibility="Collapsed" Click="showQuoteButton_Click" />
+                <TextBox Visibility="Visible" 
+                         InputScope="Text" 
+                         FontSize="23" 
+                         TextWrapping="Wrap" 
+                         Name="answerTextBox" 
+                         AcceptsReturn="True" 
+                         MinHeight="200" 
+                         TextChanged="answerTextBox_TextChanged"
+                         />
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+        <Canvas 
+            Name="policeCanvas" 
+            Background="#FFC4C2C2" 
+            Width="290" 
+            Height="200" 
+            Margin="0,0,0,0" 
+            Grid.Row="1" 
+            Visibility="Collapsed">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <jayway:RoundButton Width="72" Name="boldButton" Image="Images/ImagesBB/textbold.png" Click="boldButton_Click" />
+                    <jayway:RoundButton Width="72" Name="italicsButton" Image="Images/ImagesBB/textitalics.png" Click="italicsButton_Click"/>
+                    <jayway:RoundButton Width="72" Name="underlineButton" Image="Images/ImagesBB/textunderline.png" Click="underlineButton_Click" />
+                    <jayway:RoundButton Width="72" Name="spoilerButton" Image="Images/ImagesBB/textspoil.png" Click="spoilerButton_Click" />
+                </StackPanel>
+                <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <jayway:RoundButton Width="72" Name="urlButton" Image="Images/ImagesBB/texturl.png" Click="urlButton_Click" />
+                    <jayway:RoundButton Width="72" Name="imgButton" Image="Images/ImagesBB/textimg.png" Click="imgButton_Click" />
+                    <jayway:RoundButton Width="72" Name="citButton" Image="Images/ImagesBB/textcit.png" Click="citButton_Click" />
+                </StackPanel>
+                <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Padding="0" Margin="0,0,5,0" Width="40" Height="40" Style="{StaticResource RedButton}" Tag="#ff0000" Click="colorButton_Click" BorderThickness="0" />
+                    <Button Padding="0" Margin="0,0,5,0" Width="40" Height="40" Style="{StaticResource BlueButton}" Tag="#0000ff" Click="colorButton_Click" BorderThickness="0" />
+                    <Button Padding="0" Margin="0,0,5,0" Width="40" Height="40" Style="{StaticResource GreenButton}" Tag="#00c000" Click="colorButton_Click" BorderThickness="0" />
+                    <Button Padding="0" Margin="0,0,5,0" Width="40" Height="40" Style="{StaticResource OrangeButton}" Tag="#ffb80f" Click="colorButton_Click" BorderThickness="0" />
+                    <Button Padding="0" Margin="0,0,5,0" Width="40" Height="40" Style="{StaticResource PurpleButton}" Tag="#76027a" Click="colorButton_Click" BorderThickness="0" />
+                    <Button Padding="0" Margin="0,0,5,0" Width="40" Height="40" Style="{StaticResource GrayButton}" Tag="#808080" Click="colorButton_Click" BorderThickness="0" />
+                </StackPanel>
+            </StackPanel>
+        </Canvas>
+
+    </Grid>
+    <!--</ScrollViewer>-->
+    <!--Exemple de code illustrant l'utilisation de l'ApplicationBar-->
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
+            <shell:ApplicationBarIconButton x:Name="sendButton" Click="sendButton_Click" IconUri="/Images/ImagesTopics/postanswer.png" Text="envoyer" />
+            <shell:ApplicationBarIconButton x:Name="policeButton" Click="policeButton_Click" IconUri="/Images/ImagesTopics/police.png" Text="options de texte" />
+            <shell:ApplicationBarIconButton x:Name="hfrrehostButton" Click="hfrrehostButton_Click" IconUri="/Images/ImagesTopics/photo.png" Text="envoyer une photo" />
+            <shell:ApplicationBarIconButton x:Name="smileyButton" Click="smileyButton_Click"  IconUri="/Images/ImagesTopics/redface.png" Text="smileys" />
+
+            <!--<shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Text="ÉlémentMenu 1"/>
+                <shell:ApplicationBarMenuItem Text="ÉlémentMenu 2"/>
+            </shell:ApplicationBar.MenuItems>-->
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
+
+</phone:PhoneApplicationPage>

@@ -1,0 +1,5 @@
+D:\Documents\Visual Studio 2010\Projects\HFR7\7.1\FavSchedulerAgent\Bin\Debug\FavSchedulerAgent.dll
+D:\Documents\Visual Studio 2010\Projects\HFR7\7.1\FavSchedulerAgent\Bin\Debug\FavSchedulerAgent.pdb
+D:\Documents\Visual Studio 2010\Projects\HFR7\7.1\FavSchedulerAgent\obj\Debug\ResolveAssemblyReference.cache
+D:\Documents\Visual Studio 2010\Projects\HFR7\7.1\FavSchedulerAgent\obj\Debug\FavSchedulerAgent.dll
+D:\Documents\Visual Studio 2010\Projects\HFR7\7.1\FavSchedulerAgent\obj\Debug\FavSchedulerAgent.pdb

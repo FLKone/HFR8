@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.20506</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{88717AF1-CA0C-4F57-BC4F-D6E42D0CA20C}</ProjectGuid>
+    <ProjectTypeGuids>{C089C8C0-30E0-4E22-80C0-CE093F111A43};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FavSchedulerAgent</RootNamespace>
+    <AssemblyName>FavSchedulerAgent</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <TargetFrameworkProfile>WindowsPhone71</TargetFrameworkProfile>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <SilverlightApplication>false</SilverlightApplication>
+    <ValidateXaml>true</ValidateXaml>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+    <BackgroundAgentType>ScheduledTaskAgent</BackgroundAgentType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\Release</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Phone" />
+    <Reference Include="System.Windows" />
+    <Reference Include="system" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Net" />
+    <Reference Include="mscorlib.extensions" />
+    <Reference Include="System.Xml.Serialization" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Classes\crc32.cs" />
+    <Compile Include="Classes\EncodingFoundException.cs" />
+    <Compile Include="Classes\HtmlAttribute.cs" />
+    <Compile Include="Classes\HtmlAttributeCollection.cs" />
+    <Compile Include="Classes\HtmlCommentNode.cs" />
+    <Compile Include="Classes\HtmlDocument.cs" />
+    <Compile Include="Classes\HtmlDocumentLoadCompleted.cs" />
+    <Compile Include="Classes\HtmlElementFlag.cs" />
+    <Compile Include="Classes\HtmlEntity.cs" />
+    <Compile Include="Classes\HtmlNameTable.cs" />
+    <Compile Include="Classes\HtmlNode.cs" />
+    <Compile Include="Classes\HtmlNodeCollection.cs" />
+    <Compile Include="Classes\HtmlNodeType.cs" />
+    <Compile Include="Classes\HtmlParseError.cs" />
+    <Compile Include="Classes\HtmlParseErrorCode.cs" />
+    <Compile Include="Classes\HtmlTextNode.cs" />
+    <Compile Include="Classes\HtmlWeb.cs" />
+    <Compile Include="Classes\IOLibrary.cs" />
+    <Compile Include="Classes\MixedCodeDocument.cs" />
+    <Compile Include="Classes\MixedCodeDocumentCodeFragment.cs" />
+    <Compile Include="Classes\MixedCodeDocumentFragment.cs" />
+    <Compile Include="Classes\MixedCodeDocumentFragmentList.cs" />
+    <Compile Include="Classes\MixedCodeDocumentFragmentType.cs" />
+    <Compile Include="Classes\MixedCodeDocumentTextFragment.cs" />
+    <Compile Include="Classes\NameValuePair.cs" />
+    <Compile Include="Classes\NameValuePairList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\Trace.cs" />
+    <Compile Include="Classes\Trace.FullFramework.cs" />
+    <Compile Include="Classes\Utilities.cs" />
+    <Compile Include="HFRClasses\GetCatName.cs" />
+    <Compile Include="HFRClasses\ListTopics.cs" />
+    <Compile Include="HFRClasses\NotifTopics.cs" />
+    <Compile Include="HFRClasses\TimeSpentTopic.cs" />
+    <Compile Include="HFRClasses\TopicFav.cs" />
+    <Compile Include="SilverlightExtensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TaskScheduler.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />
+  <ProjectExtensions />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

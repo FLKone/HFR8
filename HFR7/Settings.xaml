@@ -1,0 +1,189 @@
+﻿<phone:PhoneApplicationPage
+    Name="SettingsPA"
+    x:Class="HFR7.Settings"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="480"
+    shell:SystemTray.IsVisible="True" Loaded="PhoneApplicationPage_Loaded">
+    <toolkit:TransitionService.NavigationInTransition>
+            <toolkit:NavigationInTransition>
+                <toolkit:NavigationInTransition.Backward>
+                    <toolkit:TurnstileTransition Mode="BackwardIn"/>
+                </toolkit:NavigationInTransition.Backward>
+                <toolkit:NavigationInTransition.Forward>
+                    <toolkit:TurnstileTransition Mode="ForwardIn"/>
+                </toolkit:NavigationInTransition.Forward>
+            </toolkit:NavigationInTransition>
+        </toolkit:TransitionService.NavigationInTransition>
+        <toolkit:TransitionService.NavigationOutTransition>
+            <toolkit:NavigationOutTransition>
+                <toolkit:NavigationOutTransition.Backward>
+                    <toolkit:TurnstileTransition Mode="BackwardOut"/>
+                </toolkit:NavigationOutTransition.Backward>
+                <toolkit:NavigationOutTransition.Forward>
+                    <toolkit:TurnstileTransition Mode="ForwardOut"/>
+                </toolkit:NavigationOutTransition.Forward>
+            </toolkit:NavigationOutTransition>
+        </toolkit:TransitionService.NavigationOutTransition>
+    <!--LayoutRoot est la grille racine où tout le contenu de la page est placé-->
+    <Grid x:Name="LayoutRoot">
+        <Grid.Background>
+            <ImageBrush x:Name="backgroundImageBrush" Stretch="None"/>
+        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--TitlePanel contient le nom de l'application et le titre de la page-->
+        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
+            <TextBlock x:Name="ApplicationTitle" Text="HFR7" Style="{StaticResource PhoneTextNormalStyle}"/>
+            <TextBlock x:Name="PageTitle" Text="réglages" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+        </StackPanel>
+
+        <!--ContentPanel - placez tout contenu supplémentaire ici-->
+        <Grid Name="ContentPanel" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <ScrollViewer Height="600">
+            <StackPanel>
+                    <toolkit:ListPicker Name="fontSizeListPicker" 
+                                        Header="Quelle taille de police sur les sujets ?" 
+                                        SelectionChanged="fontSizeListPicker_SelectionChanged"
+                                        SelectedIndex="2">
+                        <toolkit:ListPickerItem Content="très petit (11 px)" />
+                        <toolkit:ListPickerItem Content="petit (13 px)" />
+                        <toolkit:ListPickerItem Content="normal (15 px)" />
+                        <toolkit:ListPickerItem Content="grand (17 px)" />
+                        <toolkit:ListPickerItem Content="énorme (19 px)" />
+                    </toolkit:ListPicker>
+                
+                    <toolkit:ListPicker Name="favorisListPicker" 
+                                        Header="Quelle page afficher pour les sujets favoris ?" 
+                                        SelectionChanged="favorisListPicker_SelectionChanged">
+                    <toolkit:ListPickerItem Content="drapeaux bleus + sujets étoilés" />
+                    <toolkit:ListPickerItem Content="drapeaux rouges (sujets lus)" />
+                    <toolkit:ListPickerItem Content="sujets étoilés uniquement" />
+                </toolkit:ListPicker>
+                    <!--<Button Name="emptyCache" Content="vider le cache des sujets" Click="emptyCache_Click" />-->
+
+                    <toolkit:ListPicker Name="displayAvatarsListPicker"
+                                        Header="Afficher les avatars ?"
+                                        SelectionChanged="displayAvatarsListPicker_SelectionChanged">
+                        <toolkit:ListPickerItem Content="tout le temps" />
+                        <toolkit:ListPickerItem Content="wifi uniquement" />
+                        <toolkit:ListPickerItem Content="jamais" />
+                    </toolkit:ListPicker>
+                
+                    <toolkit:ListPicker Name="displayImagesListPicker"
+                                        Header="Afficher les images dans les posts ?"
+                                        SelectionChanged="displayImagesListPicker_SelectionChanged">
+                        <toolkit:ListPickerItem Content="tout le temps" />
+                        <toolkit:ListPickerItem Content="wifi uniquement" />
+                        <toolkit:ListPickerItem Content="jamais" />
+                    </toolkit:ListPicker>
+                
+                    <toolkit:ToggleSwitch Name="disableLandscape"
+                                      Header="Verrouiller la rotation de l'écran ?" 
+                                      Checked="disableLandscape_Checked"
+                                      Unchecked="disableLandscape_Unchecked" />
+                    <toolkit:ToggleSwitch Name="pinchToZoom"
+                                      Header="Activer le pincer-pour-zoomer ?" 
+                                      Checked="pinchToZoom_Checked"
+                                      Unchecked="pinchToZoom_Unchecked" />
+                    <toolkit:ToggleSwitch Name="activateFavAgent"
+                                      Checked="activateFavAgent_Checked"
+                                      Unchecked="activateFavAgent_Unchecked">
+                        <toolkit:ToggleSwitch.Header>
+                            <StackPanel>
+                                <TextBlock Text="Activer la vérification automatique de l'activité des topics épinglés ?" Width="350" TextWrapping="Wrap" />
+                                <TextBlock FontSize="15" Text="Utilise 15 secondes de connexion toutes les 30 min." />
+                            </StackPanel>
+                        </toolkit:ToggleSwitch.Header>
+                    </toolkit:ToggleSwitch>
+                
+                    <toolkit:ToggleSwitch Name="activateMpNotif"
+                                      Checked="activateMpNotif_Checked"
+                                      Unchecked="activateMpNotif_Unchecked">
+                        <toolkit:ToggleSwitch.Header>
+                            <StackPanel>
+                                <TextBlock Text="Activer la notification de nouveaux MP ?" Width="350" TextWrapping="Wrap" />
+                                <TextBlock FontSize="15" Text="Nécessite d'activer la vérification automatique." />
+                            </StackPanel>
+                        </toolkit:ToggleSwitch.Header>
+                    </toolkit:ToggleSwitch>
+                
+                    <toolkit:ToggleSwitch Name="activateCache"
+                                          Checked="activateCache_Checked"
+                                          Unchecked="activateCache_Unchecked">
+                        <toolkit:ToggleSwitch.Header>
+                            <StackPanel>
+                                <TextBlock Text="Activer le préchargement des topics ?" Width="350" TextWrapping="Wrap" />
+                                <TextBlock Width="350" TextWrapping="Wrap" FontSize="15" Text="Permet de précharger la page suivante d'un topic (sans désordonner les drapeaux)." />
+                            </StackPanel>
+                        </toolkit:ToggleSwitch.Header>
+                    </toolkit:ToggleSwitch>
+
+                    <toolkit:ToggleSwitch Name="runUnderLockScreen"
+                                          Checked="runUnderLockScreen_Checked"
+                                          Unchecked="runUnderLockScreen_Unchecked">
+                        <toolkit:ToggleSwitch.Header>
+                            <StackPanel>
+                                <TextBlock Text="Autoriser l'appli à rester active lorsque l'écran est éteint ?" Width="350" TextWrapping="Wrap" />
+                                <TextBlock Width="350" TextWrapping="Wrap" FontSize="15" Text="Permet de continuer de charger un sujet quand l'écran s'éteint." />
+                            </StackPanel>
+                        </toolkit:ToggleSwitch.Header>
+                    </toolkit:ToggleSwitch>
+
+                    <toolkit:ToggleSwitch Name="refreshFavWP"
+                                          Checked="refreshFavWP_Checked"
+                                          Unchecked="refreshFavWP_Unchecked">
+                        <toolkit:ToggleSwitch.Header>
+                            <StackPanel>
+                                <TextBlock Text="Rafraîchir les favoris à chaque retour ?" Width="350" TextWrapping="Wrap" />
+                                <TextBlock Width="350" TextWrapping="Wrap" FontSize="15" Text="Permet rafraîchir les favoris à chaque retour vers la liste." />
+                            </StackPanel>
+                        </toolkit:ToggleSwitch.Header>
+                    </toolkit:ToggleSwitch>
+                    <toolkit:ToggleSwitch Name="vibrateLoad"
+                                          Checked="vibrateLoad_Checked"
+                                          Unchecked="vibrateLoad_Unchecked">
+                        <toolkit:ToggleSwitch.Header>
+                            <StackPanel>
+                                <TextBlock Text="Vibrer quand un topic est chargé ?" Width="350" TextWrapping="Wrap" />
+                                <TextBlock Width="350" TextWrapping="Wrap" FontSize="15" Text="Le téléphone effectue une vibration quand un sujet est chargé." />
+                            </StackPanel>
+                        </toolkit:ToggleSwitch.Header>
+                    </toolkit:ToggleSwitch>
+
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+
+    <!--Exemple de code illustrant l'utilisation de l'ApplicationBar-->
+    <!--<phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
+            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button1.png" Text="Bouton 1"/>
+            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button2.png" Text="Bouton 2"/>
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Text="ÉlémentMenu 1"/>
+                <shell:ApplicationBarMenuItem Text="ÉlémentMenu 2"/>
+            </shell:ApplicationBar.MenuItems>
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>-->
+
+</phone:PhoneApplicationPage>

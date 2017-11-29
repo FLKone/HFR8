@@ -1,0 +1,162 @@
+﻿<phone:PhoneApplicationPage 
+    Name="SearchTopicPA"
+    x:Class="HFR7.SearchTopic"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="PortraitOrLandscape" Orientation="Portrait"
+    mc:Ignorable="d"
+    Loaded="SearchTopicPA_Loaded"
+    OrientationChanged="SearchTopicPA_OrientationChanged"
+    shell:SystemTray.IsVisible="True"
+     shell:SystemTray.Opacity="0.6"
+    d:DesignHeight="768" 
+    d:DesignWidth="480" >
+    <!--<toolkit:TransitionService.NavigationInTransition>
+        <toolkit:NavigationInTransition>
+            <toolkit:NavigationInTransition.Backward>
+                <toolkit:TurnstileTransition Mode="BackwardIn"/>
+            </toolkit:NavigationInTransition.Backward>
+            <toolkit:NavigationInTransition.Forward>
+                <toolkit:TurnstileTransition Mode="ForwardIn"/>
+            </toolkit:NavigationInTransition.Forward>
+        </toolkit:NavigationInTransition>
+    </toolkit:TransitionService.NavigationInTransition>
+    <toolkit:TransitionService.NavigationOutTransition>
+        <toolkit:NavigationOutTransition>
+            <toolkit:NavigationOutTransition.Backward>
+                <toolkit:TurnstileTransition Mode="BackwardOut"/>
+            </toolkit:NavigationOutTransition.Backward>
+            <toolkit:NavigationOutTransition.Forward>
+                <toolkit:TurnstileTransition Mode="ForwardOut"/>
+            </toolkit:NavigationOutTransition.Forward>
+        </toolkit:NavigationOutTransition>
+    </toolkit:TransitionService.NavigationOutTransition>-->
+    <phone:PhoneApplicationPage.Resources>
+        <Storyboard x:Name="quitSB">
+            <DoubleAnimation Duration="0:0:1" To="500" 
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" 
+                             Storyboard.TargetName="readTopicWebBrowser"
+                             d:IsOptimized="True">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Duration="0:0:1" To="0" 
+                             Storyboard.TargetProperty="Opacity" 
+                             Storyboard.TargetName="readTopicWebBrowser"
+                             d:IsOptimized="True">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Name="enterSB">
+            <DoubleAnimation x:Name="opacityWebBrowserDA" 
+                             Duration="0:0:0.2" From="0" To="1"
+                             BeginTime="0:0:0"
+                             Storyboard.TargetProperty="Opacity" 
+                             Storyboard.TargetName="readTopicWebBrowser"
+                             d:IsOptimized="True">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Name="quitLoadingTextBlock">
+            <DoubleAnimation Duration="0:0:0.2"
+                             From="0"
+                             To="-150"
+                             BeginTime="0:0:0"
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" 
+                             Storyboard.TargetName="loadingCanvas" />
+        </Storyboard>
+
+        <Storyboard x:Name="enterLoadingTextBlock">
+            <DoubleAnimation Duration="0:0:0.4"
+                             From="-150"
+                             To="0"
+                             BeginTime="0:0:0"
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" 
+                             Storyboard.TargetName="loadingCanvas" />
+        </Storyboard>
+
+        
+    </phone:PhoneApplicationPage.Resources>
+    <!--LayoutRoot est la grille racine où tout le contenu de la page est placé-->
+    <Grid x:Name="LayoutRoot">
+        <Grid.RenderTransform>
+            <CompositeTransform />
+        </Grid.RenderTransform>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--ContentPanel - placez tout contenu supplémentaire ici-->
+        <Grid x:Name="TopicPanel" 
+                  Margin="0,0,0,0" 
+                  Grid.Row="1" 
+                  Opacity="1"
+                  HorizontalAlignment="Center"
+                  >
+            <phone:WebBrowser Name="readTopicWebBrowser"
+                              Opacity="0"
+                              Margin="0,0,0,0"
+                              IsScriptEnabled="True"
+                              Height="730"
+                              Width="480"
+                              HorizontalAlignment="Center"
+                              Navigating="readTopicWebBrowser_Navigating"
+                              Navigated="readTopicWebBrowser_Navigated"
+                              Foreground="{StaticResource PhoneBackgroundBrush}" >
+                <phone:WebBrowser.RenderTransform>
+                    <CompositeTransform />
+                </phone:WebBrowser.RenderTransform>
+            </phone:WebBrowser>
+            <Canvas Name="loadingCanvas" VerticalAlignment="Top" Visibility="Visible" Margin="0,0,0,0" Height="250" Background="{StaticResource PhoneBackgroundBrush}">
+                <Canvas.RenderTransform>
+                    <CompositeTransform />
+                </Canvas.RenderTransform>
+                <StackPanel Name="loadingStackPanel" Margin="0,30,0,0" >
+                    <TextBlock Name="topicNameTextBlock" Margin="10,0,0,0" FontSize="22" TextAlignment="left" Text=" " TextWrapping="Wrap" Width="470">
+                        <TextBlock.RenderTransform>
+                            <CompositeTransform />
+                        </TextBlock.RenderTransform>
+                    </TextBlock>
+                    <TextBlock Name="pagesTextBlock" Margin="10,-10,0,0" FontSize="42" TextAlignment="left" Width="470" Text=" " TextWrapping="Wrap">
+                        <TextBlock.RenderTransform>
+                            <CompositeTransform />
+                        </TextBlock.RenderTransform>
+                    </TextBlock>
+                </StackPanel>
+            </Canvas>
+            
+        </Grid>
+        <Canvas Name="internWebBrowserCanvas"
+                Width="450" 
+                Height="580" 
+                Margin="0,10,0,0"
+                Grid.Row="1" 
+                Visibility="Collapsed"
+                VerticalAlignment="Top" >
+            <TextBlock Text="Chargement..."
+                       FontSize="24"
+                       Margin="155,300,0,0"/>
+            <phone:WebBrowser Name="internWebBrowser" 
+                              Visibility="Collapsed"
+                              Width="450" Height="580" 
+                              Navigated="internWebBrowser_Navigated" 
+                              Foreground="{StaticResource PhoneBackgroundBrush}" />
+
+        </Canvas>
+    </Grid>
+</phone:PhoneApplicationPage>

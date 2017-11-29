@@ -1,0 +1,757 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Shapes;
+using Microsoft.Phone.Controls;
+using System.IO.IsolatedStorage;
+using System.IO;
+using System.Xml.Linq;
+using HtmlAgilityPack;
+using System.Text.RegularExpressions;
+using System.Text;
+using Microsoft.Phone.Tasks;
+using System.Threading;
+using System.Windows.Media.Imaging;
+using Microsoft.Phone.Shell;
+using System.Xml;
+
+namespace HFR7
+{
+    public partial class ReadTopic : PhoneApplicationPage
+    {
+        System.IO.IsolatedStorage.IsolatedStorageSettings store = System.IO.IsolatedStorage.IsolatedStorageSettings.ApplicationSettings;
+        string idCat;
+        string idTopic;
+        string topicName;
+        string souscatUri;
+        string souscatName;
+        string pageNumber;
+        string reponseId;
+        string numberOfPages;
+        bool invoked = false;
+        bool fromAnswer = false;
+        XDocument docTopic = new XDocument();
+        int wbHeight;
+        int wbWidth;
+        string content = "";
+        bool navigationStop = true;
+        IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
+        CookieContainer container = new CookieContainer();
+        string userPseudo;
+
+        public ReadTopic()
+        {
+            InitializeComponent();
+        }
+
+        private void PhoneApplicationPage_Loaded(object sender, RoutedEventArgs e)
+        {
+
+            // Arrêt de la navigation
+            navigationStop = false;
+
+            // Réponse postée ?
+            if (store.Contains("fromAnswer"))
+            {
+                fromAnswer = true;
+                store.Remove("fromAnswer");
+            }
+
+            // Récupération du pseudo
+            userPseudo = store["userPseudo"] as string;
+
+            // Récupération de l'URI de la sous-catégorie (override backbutton)
+            NavigationContext.QueryString.TryGetValue("souscaturi", out souscatUri);
+            souscatUri = HttpUtility.UrlDecode(souscatUri);
+
+            // Récupération du nom de la sous-catégorie (override backbutton)
+            NavigationContext.QueryString.TryGetValue("souscatname", out souscatName);
+            souscatName = HttpUtility.UrlDecode(souscatName);
+
+            // Récupération du numéro de la page
+            NavigationContext.QueryString.TryGetValue("pagenumber", out pageNumber);
+
+            // Récupération de l'anchor
+            NavigationContext.QueryString.TryGetValue("reponseid", out reponseId);
+
+            // Récupération du nombre de pages
+            NavigationContext.QueryString.TryGetValue("numberofpages", out numberOfPages);
+
+            // Page title
+            PageTitle.Text = "page " + pageNumber + "/" + numberOfPages;
+
+            // Récupération de l'ID de la catégorie
+            NavigationContext.QueryString.TryGetValue("idcat", out idCat);
+
+            // Récupération de l'ID du topic
+            NavigationContext.QueryString.TryGetValue("idtopic", out idTopic);
+
+            // Récupération du nom du topic
+            NavigationContext.QueryString.TryGetValue("topicname", out topicName);
+            topicName = HttpUtility.HtmlDecode(HttpUtility.UrlDecode(topicName));
+            ApplicationTitle.Text = topicName.ToUpper();
+
+            // Cachage des boutons de changement de page
+            // Page suivante
+            if (Convert.ToInt32(pageNumber) == Convert.ToInt32(numberOfPages))
+            {
+                ((ApplicationBarIconButton)ApplicationBar.Buttons[2]).IsEnabled = false;
+            }
+            // Page précédente
+            if (Convert.ToInt32(pageNumber) == 1)
+            {
+                ((ApplicationBarIconButton)ApplicationBar.Buttons[0]).IsEnabled = false;
+            }
+
+            ////DEBUG
+            //idTopic = "123456";
+            //topicName = "topic";
+
+            // Taille du WB
+            if (ReadTopicPA.Orientation == PageOrientation.LandscapeLeft || ReadTopicPA.Orientation == PageOrientation.LandscapeRight)
+            {
+                wbHeight = 395;
+                wbWidth = 650;
+            }
+            else
+            {
+                wbHeight = 590;
+                wbWidth = 490;
+            }
+
+            // Création du WB
+            WebBrowser wb = new WebBrowser();
+            wb.Height = wbHeight;
+            wb.Width = wbWidth;
+            wb.Margin = new Thickness(-19, 0, 0, 0);
+            wb.Name = "readTopicWebBrowser";
+            wb.IsScriptEnabled = true;
+            wb.Navigating += new EventHandler<NavigatingEventArgs>(readTopicWebBrowser_Navigating);
+            wb.Loaded += new RoutedEventHandler(wb_Loaded);
+            try
+            {
+                TopicPanel.Children.Add(wb);
+            }
+            catch
+            {
+            }
+            ParseTopic();
+        }
+
+        void wb_Loaded(object sender, RoutedEventArgs e)
+        {
+            NavigateToTopic();
+        }
+
+        private void ParseTopic()
+        {
+            IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
+
+            // Affichage de la ProgressBar
+            progressBar.Visibility = System.Windows.Visibility.Visible;
+            try
+            {
+                if (isoStore.FileExists("topic-" + idTopic + "-" + pageNumber + ".html"))
+                {
+                    isoStore.DeleteFile("topic-" + idTopic + "-" + pageNumber + ".html");
+                }
+
+                using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream("topic-" + idTopic + "-" + pageNumber + ".html", FileMode.Create, isoStore))
+                {
+                    XDocument docModel = XDocument.Load("HTMLfile.html");
+                    XElement update = docModel.Root.Elements("head").Elements("style").First();
+                    string updateString = update.Value;
+                    string test = ((Color)Application.Current.Resources["PhoneAccentColor"]).ToString();
+                    updateString = Regex.Replace(updateString, "#ACHANGER", HFRClasses.ColorConvert.ConvertToHtml(((Color)Application.Current.Resources["PhoneAccentColor"]).ToString()));
+                    update.ReplaceAll(updateString);
+                    docModel.Save(isoStream);
+                }
+                using (IsolatedStorageFileStream isoStreamTopics = new IsolatedStorageFileStream("topic-" + idTopic + "-" + pageNumber + ".html", FileMode.Open, isoStore))
+                {
+                    docTopic = XDocument.Load(isoStreamTopics);
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Erreur dans la mise en cache du fichier témoin.");
+            }
+
+            // Récupération du cookie
+            if (store.Contains("HFRcookies"))
+            {
+                container = store["HFRcookies"] as CookieContainer;
+            }
+            else
+            {
+                container = null;
+            }
+
+            // Création d'un nombre random pour éviter la mise en cache du WebRequest :fou: :fou:
+            Random random = new Random();
+            int randomNumber = random.Next(1, 10000);
+
+            // Chargement des posts vers le HTML
+            string urlTopic = "http://forum.hardware.fr/forum2.php?config=hfr.inc&cat=" + idCat + "&post=" + idTopic + "&page=" + pageNumber + "&sondage=1&random=" + randomNumber.ToString();
+            //string urlTopic = "http://forumdev.hardware.fr/forum2.php?config=hfrdev.inc&cat=1&post=2&page=1&p=1&sondage=0&owntopic=2&trash=0&trash_post=0&print=0&numreponse=0&quote_only=0&new=0&nojs=0";
+
+            HtmlWeb.LoadAsync(urlTopic, container, (s, args) =>
+            {
+                Dispatcher.BeginInvoke(() => progressBar.Visibility = System.Windows.Visibility.Visible);
+                if (args.Error != null)
+                {
+                    Dispatcher.BeginInvoke(() =>
+                    {
+                        MessageBox.Show("Erreur dans la lecture du sujet. Informations : " + args.Error.Message + ", " + args.Error.Data);
+                        progressBar.Visibility = System.Windows.Visibility.Collapsed;
+                    });
+                }
+                if (args.Document.Text == "Serveur en cours de maintenance. <br /><br />Veuillez nous excuser pour la g?ne occasionn?e" || args.Document.Text == "Serveur en cours de maintenance. <br /><br />Veuillez nous excuser pour la gène occasionnée")
+                {
+                    MessageBox.Show("Serveur en cours de maintenance. Veuillez réessayer plus tard.");
+                }
+                else
+                {
+                    int i = 0;
+                    args.Document.OptionWriteEmptyNodes = true;
+                    string[] topicText = args.Document.DocumentNode.Descendants("div").Where(x => (bool)x.GetAttributeValue("id", "").Contains("para") == true).
+                                                Select(y => y.InnerHtml).ToArray();
+
+                    string[] messCase1 = args.Document.DocumentNode.Descendants("td")
+                        .Where(x => (bool)x.GetAttributeValue("class", "").Contains("messCase1") == true && (bool)x.InnerHtml.Contains("<div><b class=\"s2\">Publicité</b></div>") == false && (bool)x.InnerHtml.Contains("Auteur") == false)
+                        .Select(x => x.InnerHtml).ToArray();
+
+                    string[] messCase2 = args.Document.DocumentNode.Descendants("td")
+                        .Where(x => (bool)x.GetAttributeValue("class", "").Contains("messCase2") == true && (bool)x.InnerHtml.Contains("<div><b class=\"s2\">Publicité</b></div>") == false)
+                        .Select(x => x.InnerText).ToArray();
+
+                    string[] toolbar = args.Document.DocumentNode.Descendants("div")
+                        .Where(x => (bool)x.GetAttributeValue("class", "").Contains("toolbar") == true)
+                        .Select(x => x.InnerHtml).ToArray();
+
+
+                    //string[] userNumber = args.Document.DocumentNode.Descendants("a").Where(x => (bool)x.GetAttributeValue("href", "").Contains("/hfr/profil-") == true).Select(y => y.GetAttributeValue("href", "")).ToArray();
+
+
+                    //string[] avatarsTd = args.Document.DocumentNode.Descendants("td").Where(x => (string)x.GetAttributeValue("class", "") == "messCase1").
+                    //            Select(y => y.InnerHtml).ToArray();
+
+
+                    // Construction du HTML
+                    foreach (string line in topicText)
+                    {
+                        string avatarUri;
+                        string posterPseudo;
+                        string reponseId;
+                        string dateHeure;
+                        // Avatar
+                        if (messCase1[i].Contains("avatar_center"))
+                        {
+                            int firstAvatar = messCase1[i].IndexOf("<div class=\"avatar_center\" style=\"clear:both\"><img src=\"") + "<div class=\"avatar_center\" style=\"clear:both\"><img src=\"".Length;
+                            int lastAvatar = messCase1[i].LastIndexOf("\" alt=\"");
+                            avatarUri = messCase1[i].Substring(firstAvatar, lastAvatar - firstAvatar);
+                        }
+                        else
+                        {
+                            avatarUri = "http://hfr-rehost.net/http://self/pic/38e3cb43a870901b2fa2df24c608bb9fbe7e44f1.png";
+                        }
+
+                        // Date et heure
+                        int firstDate = toolbar[i].IndexOf("Posté le ") + "Posté le ".Length; ;
+                        int lastDate = 31;
+                        dateHeure = Regex.Replace(toolbar[i].Substring(firstDate, lastDate), "&nbsp;", " ");
+
+                        // Pseudo
+                        int firstPseudo = messCase1[i].IndexOf("<b class=\"s2\">") + "<b class=\"s2\">".Length;
+                        int lastPseudo = messCase1[i].LastIndexOf("</b>");
+                        posterPseudo = messCase1[i].Substring(firstPseudo, lastPseudo - firstPseudo);
+
+                        //Id de la réponse
+                        int firstReponseId = messCase1[i].IndexOf("title=\"n°") + "title=\"n°".Length;
+                        int lastReponseId = messCase1[i].LastIndexOf("\" alt=\"n°");
+                        reponseId = messCase1[i].Substring(firstReponseId, lastReponseId - firstReponseId);
+
+                        // Mise en forme du texte
+                        int lastPostText = topicText[i].IndexOf("<span class=\"signature\">");
+                        if (lastPostText == -1)
+                        {
+                            lastPostText = topicText[i].Length;
+                        }
+                        string postText = topicText[i].Substring(0, lastPostText);
+                        postText = Regex.Replace(HttpUtility.HtmlDecode(postText), " target=\"_blank\"", "");
+                        postText = Regex.Replace(postText, "<img", "<img class=\"HFRimg\"");
+
+                        // Construction de la page HTML
+                        // Vérification si posteur = user
+                        XElement menu = new XElement("menu", "menu");
+                        if (posterPseudo.ToLower() == userPseudo.ToLower())
+                        {
+                            // Menu de post
+                            menu = new XElement("div", new XAttribute("class", "menu_post"), new XAttribute("name", "menu_post"), new XAttribute("id", "rep" + reponseId), new XAttribute("style", "visibility:hidden"),
+                                new XElement("img", new XAttribute("onClick", "HideMenu('rep" + reponseId + "');"), new XAttribute("class", "menu_post_close"), new XAttribute("src", "http://hfr-rehost.net/http://self/pic/0be485eecaa2803d3c0daf81593cb02e8e3eea42.png"), new XAttribute("width", "32"), new XAttribute("height", "32")),
+                                new XElement("ul", new XAttribute("class", "menu_post_list"),
+                                    new XElement("li",
+                                        new XElement("a", new XAttribute("href", "/AnswerTopic.xaml?idtopic=" + idTopic + "&idcat=" + idCat + "&pagenumber=" + pageNumber + "&topicname=" + topicName + "&action=quote&numrep=" + reponseId), new XAttribute("class", "menu_post_link"), "citer"), new XAttribute("class", "menu_post_li")),
+                                //new XElement("li",
+                                //    new XElement("a", new XAttribute("href", "#"), new XAttribute("class", "menu_post_link"), "ajouter aux citations"), new XAttribute("class", "menu_post_li")),
+                                    new XElement("li",
+                                        new XElement("a", new XAttribute("href", "/AnswerTopic.xaml?idtopic=" + idTopic + "&idcat=" + idCat + "&pagenumber=" + pageNumber + "&topicname=" + topicName + "&action=edit&numrep=" + reponseId), new XAttribute("class", "menu_post_link"), "éditer"), new XAttribute("class", "menu_post_li")),
+                                    new XElement("li",
+                                        new XElement("a", new XAttribute("href", "/AnswerTopic.xaml?idtopic=" + idTopic + "&idcat=" + idCat + "&pagenumber=" + pageNumber + "&topicname=" + topicName + "&action=delete&numrep=" + reponseId), new XAttribute("class", "menu_post_link"), "supprimer"), new XAttribute("class", "menu_post_li"))));
+
+                        }
+                        else
+                        {
+                            // Menu de post
+                            menu = new XElement("div", new XAttribute("class", "menu_post"), new XAttribute("name", "menu_post"), new XAttribute("id", "rep" + reponseId), new XAttribute("style", "visibility:hidden"),
+                                new XElement("img", new XAttribute("onClick", "HideMenu('rep" + reponseId + "');"), new XAttribute("class", "menu_post_close"), new XAttribute("src", "http://hfr-rehost.net/http://self/pic/0be485eecaa2803d3c0daf81593cb02e8e3eea42.png"), new XAttribute("width", "32"), new XAttribute("height", "32")),
+                                new XElement("ul", new XAttribute("class", "menu_post_list"),
+                                    new XElement("li",
+                                        new XElement("a", new XAttribute("href", "/AnswerTopic.xaml?idtopic=" + idTopic + "&idcat=" + idCat + "&pagenumber=" + pageNumber + "&topicname=" + topicName + "&action=quote&numrep=" + reponseId), new XAttribute("class", "menu_post_link"), "citer"), new XAttribute("class", "menu_post_li"))
+                                //new XElement("li",
+                                //    new XElement("a", new XAttribute("href", "#"), new XAttribute("class", "menu_post_link"), "ajouter aux citations"), new XAttribute("class", "menu_post_li"))
+                                        ));
+                        }
+
+                        XElement post = new XElement("table", new XAttribute("class", "tableGlobal"),
+                                            menu,
+                                            new XElement("tr", new XAttribute("class", "trInfos"), new XAttribute("onClick", "ShowMenu('rep" + reponseId + "');"),
+                                                new XElement("td", new XAttribute("class", "avatarTd"),
+                            //Avatar
+                                                new XElement("img", new XAttribute("src", avatarUri), new XAttribute("class", "avatarImage"))
+                                                    ),
+                                                    new XElement("td", new XAttribute("class", "tdPseudo"),
+                                                        new XElement("table",
+                                                            new XElement("tr",
+                                                                new XElement("td",
+                            // Jump Url
+                                                                new XElement("a", new XAttribute("name", "rep" + reponseId)),
+                            // Pseudo
+                                                                new XElement("div", new XAttribute("class", "divPseudo"), posterPseudo))),
+                                                            new XElement("tr",
+                                                                new XElement("td",
+                                                                    new XElement("div", new XAttribute("class", "divDateHeure"), dateHeure))))),
+
+                                                new XElement("td", new XAttribute("class", "tdAction")/*,
+                                               new XElement("img", new XAttribute("src", "http://hfr-rehost.net/http://self/pic/53eff5fe9f4ad4036a2ccd0a235460a3967d2210.png"),  new XAttribute("class", "quoteIcon"))*/ )
+                                                ),
+                            //                new XElement("tr",
+                            //                    new XElement("td", new XAttribute("colspan", "2"),
+                            //// Icones
+                            //                        new XElement("font", new XAttribute("size", "3 px"), "Icones")
+                            //                        )
+                            //                    ),
+                                            new XElement("tr", new XAttribute("class", "trPost"),
+                                                new XElement("td", new XAttribute("colspan", "3"),
+                            // Post
+                                                    new XElement("div", new XAttribute("class", "divPost"), postText)
+                                                    )
+                                                )
+                                            );
+                        docTopic.Root.Element("body").Add(post);
+                        i++;
+                    }
+
+                    //XElement icones = new XElement("table", new XAttribute("width", "100%"), new XAttribute("class", "table-layout:fixed"),
+                    //    new XElement("td", new XAttribute("width", "25%"),
+                    //        new XElement("div", new XAttribute("align", "center"), new XAttribute("id", "previousPageDivDown"), new XAttribute("style", "visibility:hidden"),
+                    //            new XElement("a", new XAttribute("id", "previousPageDown"), new XAttribute("href", ""), new XElement("img", new XAttribute("src", "http://hfr-rehost.net/http://self/pic/8b463ad6d01a79c4202660fbe3342834c155fea5.png"), new XAttribute("style", "border:none"), new XAttribute("width", "32"), new XAttribute("height", "32")))
+                    //        )
+                    //    ),
+                    //    new XElement("td", new XAttribute("width", "50%")),
+                    //    new XElement("td", new XAttribute("width", "25%"),
+                    //        new XElement("div", new XAttribute("align", "center"), new XAttribute("id", "nextPageDivDown"), new XAttribute("style", "visibility:hidden"),
+                    //            new XElement("a", new XAttribute("id", "nextPageDown"), new XAttribute("href", ""), new XElement("img", new XAttribute("src", "http://hfr-rehost.net/http://self/pic/14dbee0b228679ba852b4fcc1926fed26997ad12.png"), new XAttribute("style", "border:none"), new XAttribute("width", "32"), new XAttribute("height", "32")))
+                    //        )
+                    //    ));
+                    //docTopic.Root.Element("body").Add(icones);
+
+                    XElement last = new XElement("a", new XAttribute("name", "bas"));
+                    docTopic.Root.Element("body").Add(last);
+                    IsolatedStorageFileStream isoStreamSave = new IsolatedStorageFileStream("topic-" + idTopic + "-" + pageNumber + ".html", FileMode.Create, isoStore);
+                    docTopic.Save(isoStreamSave);
+                    isoStreamSave.Close();
+                    LoadTopicISF();
+                }
+            });
+        }
+
+        private void LoadTopicISF()
+        {
+            // ProgressBar
+            Dispatcher.BeginInvoke(() => progressBar.Visibility = System.Windows.Visibility.Visible);
+            // Ouverture de l'ISF HTML
+            IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream("topic-" + idTopic + "-" + pageNumber + ".html", FileMode.Open, isoStore);
+
+            // Modification du HTML
+            try
+            {
+                StreamReader reader = new StreamReader(isoStream);
+                content = reader.ReadToEnd();
+                reader.Close();
+                content = Regex.Replace(content, "&lt;", "<");
+                content = Regex.Replace(content, "&gt;", ">");
+                content = Regex.Replace(content, "</b><br /><br /><p>", "</b><p>");
+                content = Regex.Replace(content, "<br /> <br /> <br />", "<br />");
+            }
+            catch
+            {
+                MessageBox.Show("Erreur dans la mise en forme du HTML");
+            }
+            Dispatcher.BeginInvoke(() =>
+                    {
+                        string currentPageNumber;
+                        NavigationContext.QueryString.TryGetValue("pagenumber", out currentPageNumber);
+                    });
+
+            // Si la page est en cache et qu'on n'est pas à la dernière page
+            if (isoStore.FileExists("topic-" + idTopic + "-" + pageNumber + "-read.html") && pageNumber != numberOfPages)
+            {
+                IsolatedStorageFileStream isoStreamReadTopic = new IsolatedStorageFileStream("topic-" + idTopic + "-" + pageNumber + "-read.html", FileMode.OpenOrCreate, isoStore);
+                StreamReader readOldTopic = new StreamReader(isoStreamReadTopic);
+                string contentOldTopic = readOldTopic.ReadToEnd();
+                // Y a-t-il eu un edit ?
+                if (content.Length != contentOldTopic.Length && navigationStop)
+                {
+                    Dispatcher.BeginInvoke(() =>
+                    {
+                        progressBar.Visibility = System.Windows.Visibility.Visible;
+                        WebBrowser wbFound = (WebBrowser)FindName("readTopicWebBrowser");
+                        if (!isoStore.FileExists("cache.html"))
+                        {
+                            using (var file = isoStore.OpenFile("cache.html", System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write))
+                            {
+                                using (var writer = new StreamWriter(file))
+                                {
+                                    writer.Write("");
+                                }
+                            }
+                        }
+                        try
+                        {
+                            wbFound.Navigate(new Uri("cache.html", UriKind.Relative));
+                        }
+                        catch { }
+                        isoStreamReadTopic.Close();
+
+                    });
+                }
+                else
+                {
+                    Dispatcher.BeginInvoke(() =>
+                    {
+                        navigationStop = false;
+
+                    });
+                }
+            }
+
+            // Si la page est en cache et qu'on est à la dernière page
+            else if (isoStore.FileExists("topic-" + idTopic + "-" + pageNumber + "-read.html") && pageNumber == numberOfPages)
+            {
+                isoStore.DeleteFile("topic-" + idTopic + "-" + pageNumber + "-read.html");
+
+                using (var file = isoStore.OpenFile("topic-" + idTopic + "-" + pageNumber + "-read.html", System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write))
+                {
+                    using (var writer = new StreamWriter(file))
+                    {
+                        writer.Write(content);
+                    }
+                }
+
+                // Navigation
+                Dispatcher.BeginInvoke(() =>
+                {
+
+                    navigationStop = false;
+                    NavigateToTopic();
+                });
+            }
+            else if (!isoStore.FileExists("topic-" + idTopic + "-" + pageNumber + "-read.html"))
+            {
+                using (var file = isoStore.OpenFile("topic-" + idTopic + "-" + pageNumber + "-read.html", System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write))
+                {
+                    using (var writer = new StreamWriter(file))
+                    {
+                        writer.Write(content);
+                    }
+                }
+                // Navigation
+                Dispatcher.BeginInvoke(() =>
+                {
+
+                    navigationStop = false;
+                    NavigateToTopic();
+                });
+            }
+
+            Dispatcher.BeginInvoke(() =>
+            {
+                isoStream.Close();
+            });
+
+        }
+
+        private void NavigateToTopic()
+        {
+            IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
+            WebBrowser wbFound = (WebBrowser)FindName("readTopicWebBrowser");
+            if (isoStore.FileExists("topic-" + idTopic + "-" + pageNumber + "-read.html") && !navigationStop)
+            {
+                try
+                {
+                    wbFound.Navigate(new Uri("topic-" + idTopic + "-" + pageNumber + "-read.html", UriKind.Relative));
+                    invoked = false;
+                    wbFound.LoadCompleted += new System.Windows.Navigation.LoadCompletedEventHandler(wbFound_LoadCompleted);
+                    wbFound.Navigated += new EventHandler<System.Windows.Navigation.NavigationEventArgs>(wbFound_Navigated);
+                    wbFound.MouseEnter += new MouseEventHandler(wbFound_MouseEnter);
+                }
+                catch { }
+            }
+        }
+
+        void wbFound_MouseEnter(object sender, MouseEventArgs e)
+        {
+            WebBrowser wbFound = (WebBrowser)sender;
+            try
+            {
+                wbFound.InvokeScript("MenuVisibilityKillAll", "");
+            }
+            catch
+            {
+            }
+        }
+
+        void wbFound_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
+        {
+            WebBrowser wbFound = (WebBrowser)sender;
+            if (reponseId != "")
+            {
+                Dispatcher.BeginInvoke(() =>
+                        {
+                            while (invoked == false)
+                            {
+                                //    // Page suivante
+                                //    if (Convert.ToInt32(pageNumber) < Convert.ToInt32(numberOfPages))
+                                //    {
+                                //        wbFound.InvokeScript("ShowNextPage", "");
+                                //        wbFound.InvokeScript("NextPage", "/ReadTopic.xaml?idcat=" + idCat + "&idtopic=" + idTopic + "&topicname=" + HttpUtility.UrlEncode(topicName) + "&souscaturi=" + HttpUtility.UrlEncode(souscatUri) + "&souscatname=" + HttpUtility.UrlEncode(souscatName) + "&pagenumber=" + (Convert.ToInt32(pageNumber) + 1).ToString() + "&numberofpages=" + numberOfPages);
+                                //    }
+                                //    // Page précédente
+                                //    if (Convert.ToInt32(pageNumber) > 1)
+                                //    {
+                                //        wbFound.InvokeScript("ShowPreviousPage", "");
+                                //        wbFound.InvokeScript("PreviousPage", "/ReadTopic.xaml?idcat=" + idCat + "&idtopic=" + idTopic + "&topicname=" + HttpUtility.UrlEncode(topicName) + "&souscaturi=" + HttpUtility.UrlEncode(souscatUri) + "&souscatname=" + HttpUtility.UrlEncode(souscatName) + "&pagenumber=" + (Convert.ToInt32(pageNumber) - 1).ToString() + "&numberofpages=" + numberOfPages);
+                                //    }
+
+
+                                try
+                                {
+                                    if (fromAnswer)
+                                    {
+                                        wbFound.InvokeScript("JumpTo", "#bas");
+                                    }
+                                    else
+                                    {
+                                        wbFound.InvokeScript("JumpTo", "#" + reponseId);
+                                    }
+                                    Thread.Sleep(4000);
+                                    progressBar.Visibility = System.Windows.Visibility.Collapsed;
+                                    invoked = true;
+                                }
+                                catch
+                                {
+                                    invoked = false;
+                                }
+                                Thread.Sleep(500);
+                            }
+                        });
+            }
+
+        }
+
+
+        void wbFound_LoadCompleted(object sender, System.Windows.Navigation.NavigationEventArgs e)
+        {
+            WebBrowser wbFound = (WebBrowser)sender;
+            if (e.Uri.ToString().Contains("cache.html"))
+            {
+                isoStore.DeleteFile("topic-" + idTopic + "-" + pageNumber + "-read.html");
+                using (var file = isoStore.OpenFile("topic-" + idTopic + "-" + pageNumber + "-read.html", System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write))
+                {
+                    using (var writer = new StreamWriter(file))
+                    {
+                        writer.Write(content);
+                    }
+                }
+                navigationStop = false;
+                NavigateToTopic();
+            }
+        }
+
+        // Interception navigation hors application
+        void readTopicWebBrowser_Navigating(object sender, NavigatingEventArgs e)
+        {
+            string navUri = e.Uri.ToString();
+            if (!navUri.Contains("topic-" + idTopic + "-" + pageNumber + "-read.html") && !navUri.Contains("ReadTopic.xaml") && !navUri.Contains("cache.html") && !navUri.Contains("AnswerTopic.xaml"))
+            {
+                e.Cancel = true;
+                WebBrowserTask task = new WebBrowserTask();
+                task.URL = e.Uri.ToString();
+                task.Show();
+            }
+
+            if (navUri.Contains("ReadTopic.xaml"))
+            {
+                e.Cancel = true;
+                NavigationService.Navigate(new Uri(e.Uri.ToString(), UriKind.Relative));
+            }
+
+            if (navUri.Contains("AnswerTopic.xaml"))
+            {
+                e.Cancel = true;
+                NavigationService.Navigate(new Uri(e.Uri.ToString(), UriKind.Relative));
+            }
+        }
+
+        // Interception bouton back
+        protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
+        {
+            if (choosePageCanvas.Visibility == System.Windows.Visibility.Visible)
+            {
+                e.Cancel = true;
+                choosePageCanvas.Visibility = System.Windows.Visibility.Collapsed;
+                TopicPanel.Opacity = 1;
+            }
+            else
+            {
+                e.Cancel = true;
+                progressBar.Visibility = Visibility.Visible;
+                if (souscatName == null || souscatName == "") Dispatcher.BeginInvoke(() => { NavigationService.Navigate(new Uri("/WelcomePage.xaml?pivot=1", UriKind.Relative)); });
+                else Dispatcher.BeginInvoke(() => { NavigationService.Navigate(new Uri("/ListTopics.xaml?souscaturi=" + souscatUri + "&idcat=" + idCat + "&souscatname=" + souscatName, UriKind.Relative)); });
+            }
+        }
+
+        private void PhoneApplicationPage_OrientationChanged(object sender, OrientationChangedEventArgs e)
+        {
+            WebBrowser wbFound = (WebBrowser)FindName("readTopicWebBrowser");
+            switch (e.Orientation)
+            {
+                case PageOrientation.Landscape:
+                case PageOrientation.LandscapeLeft:
+                case PageOrientation.LandscapeRight:
+                    try
+                    {
+                        wbFound.Height = 395;
+                        wbFound.Width = 650;
+                    }
+                    catch
+                    {
+                        wbHeight = 395;
+                        wbWidth = 650;
+                    }
+                    break;
+
+                case PageOrientation.Portrait:
+                case PageOrientation.PortraitUp:
+                case PageOrientation.PortraitDown:
+                    try
+                    {
+                        wbFound.Height = 590;
+                        wbFound.Width = 490;
+                    }
+                    catch
+                    {
+                        wbHeight = 590;
+                        wbWidth = 490;
+                    }
+                    break;
+            }
+        }
+
+        private void previousPageAppbarButton_Click(object sender, EventArgs e)
+        {
+            // Page suivante
+            if (Convert.ToInt32(pageNumber) > 1)
+            {
+                navigationStop = true;
+                NavigationService.Navigate(new Uri("/ReadTopic.xaml?idcat=" + idCat + "&idtopic=" + idTopic + "&topicname=" + HttpUtility.UrlEncode(topicName) + "&souscaturi=" + HttpUtility.UrlEncode(souscatUri) + "&souscatname=" + HttpUtility.UrlEncode(souscatName) + "&pagenumber=" + (Convert.ToInt32(pageNumber) - 1).ToString() + "&numberofpages=" + numberOfPages, UriKind.Relative));
+            }
+            else
+            {
+                ((ApplicationBarIconButton)ApplicationBar.Buttons[0]).IsEnabled = false;
+            }
+        }
+
+        private void nextPageAppbarButton_Click(object sender, EventArgs e)
+        {
+
+            if (Convert.ToInt32(pageNumber) < Convert.ToInt32(numberOfPages))
+            {
+                navigationStop = true;
+                NavigationService.Navigate(new Uri("/ReadTopic.xaml?idcat=" + idCat + "&idtopic=" + idTopic + "&topicname=" + HttpUtility.UrlEncode(topicName) + "&souscaturi=" + HttpUtility.UrlEncode(souscatUri) + "&souscatname=" + HttpUtility.UrlEncode(souscatName) + "&pagenumber=" + (Convert.ToInt32(pageNumber) + 1).ToString() + "&numberofpages=" + numberOfPages, UriKind.Relative));
+            }
+            else
+            {
+                ((ApplicationBarIconButton)ApplicationBar.Buttons[2]).IsEnabled = false;
+            }
+        }
+
+        private void first_page_Click(object sender, EventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/ReadTopic.xaml?idcat=" + idCat + "&idtopic=" + idTopic + "&topicname=" + HttpUtility.UrlEncode(topicName) + "&souscaturi=" + HttpUtility.UrlEncode(souscatUri) + "&souscatname=" + HttpUtility.UrlEncode(souscatName) + "&pagenumber=1&numberofpages=" + numberOfPages, UriKind.Relative));
+        }
+
+        private void last_page_Click(object sender, EventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/ReadTopic.xaml?idcat=" + idCat + "&idtopic=" + idTopic + "&topicname=" + HttpUtility.UrlEncode(topicName) + "&souscaturi=" + HttpUtility.UrlEncode(souscatUri) + "&souscatname=" + HttpUtility.UrlEncode(souscatName) + "&pagenumber=" + numberOfPages + "&numberofpages=" + numberOfPages, UriKind.Relative));
+        }
+
+        private void answerButton_Click(object sender, EventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/AnswerTopic.xaml?idtopic=" + idTopic + "&idcat=" + idCat + "&pagenumber=" + pageNumber + "&topicname=" + topicName + "&action=answer", UriKind.Relative));
+        }
+
+        private void choose_page_Click(object sender, EventArgs e)
+        {
+            choosePageCanvas.Visibility = System.Windows.Visibility.Visible;
+            TopicPanel.Opacity = 0.3;
+            pageNumberChooseTextBox.Focus();
+        }
+
+        private void pageNumberChooseButton_Click(object sender, RoutedEventArgs e)
+        {
+            string pageChosenString = pageNumberChooseTextBox.Text;
+            double pageChosenDouble;
+            if (pageChosenString == "")
+            {
+                MessageBox.Show("Veuillez entrer un numéro de page.");
+            }
+            else
+            {
+                bool isNum = double.TryParse(pageChosenString, out pageChosenDouble);
+                if (!isNum)
+                {
+                    MessageBox.Show("Veuillez entrer un numéro de page correct.");
+                }
+                else
+                {
+                    if (pageChosenDouble < 0 || pageChosenDouble > Convert.ToDouble(numberOfPages))
+                    {
+                        MessageBox.Show("Veuillez entrer un numéro de page compris entre 0 et " + Convert.ToDouble(numberOfPages) + ".");
+                    }
+                    else
+                    {
+                        NavigationService.Navigate(new Uri("/ReadTopic.xaml?idtopic=" + idTopic + "&idcat=" + idCat + "&pagenumber=" + pageChosenDouble + "&topicname=" + topicName + "&numerofpages=" + numberOfPages, UriKind.Relative));
+                    }
+                }
+            }
+        }
+    }
+}

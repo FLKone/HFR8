@@ -1,0 +1,77 @@
+﻿<phone:PhoneApplicationPage 
+    x:Class="HFR7.ReadTopic"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="480"
+    shell:SystemTray.IsVisible="True" Loaded="PhoneApplicationPage_Loaded">
+
+    <!--LayoutRoot est la grille racine où tout le contenu de la page est placé-->
+    <Grid x:Name="LayoutRoot" Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--TitlePanel contient le nom de l'application et le titre de la page-->
+        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
+            <TextBlock TextWrapping="Wrap" x:Name="ApplicationTitle" Text=" " Style="{StaticResource PhoneTextNormalStyle}"/>
+            <TextBlock x:Name="PageTitle" Text="page 1" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+        </StackPanel>
+
+        <!--ContentPanel - placez tout contenu supplémentaire ici-->
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+            <ScrollViewer Height="600">
+            <StackPanel>          
+                <StackPanel Name="globalStackPanel" Margin="0,0,0,20" Background="#FFEFEFEF">
+                    <StackPanel Name="userStackPanel" Orientation="Horizontal" Width="450">
+                        <TextBlock FontSize="60" HorizontalAlignment="Center" Text="(av)" />
+                        <TextBlock FontSize="30" VerticalAlignment="Center" Text="Alphonse 22" />
+                    </StackPanel>
+                    <TextBlock TextDecorations="Underline" FontSize="20" TextWrapping="Wrap">13/02/2011 à 14h14</TextBlock>
+                    <TextBlock FontSize="20" Text="Seule annonce pour l'instant concernant WP7 : Nokia espère sortir un premier modèle sous l'OS de Microsoft cette année. 
+
+    Mais ils ne feront d'annonce produit que lorsque la date de sortie sera certaine et proche. Stephen Elop se débrouille très bien dans sa conduite du changement, malgré la force de celui-ci pour Nokia !" TextWrapping="Wrap"></TextBlock>
+
+                </StackPanel>
+
+                <StackPanel Name="globalStackPanel2" Background="#FFE7EBFF">
+                    <StackPanel Orientation="Horizontal" Width="450" Height="Auto">
+                        <TextBlock FontSize="60" HorizontalAlignment="Center" Text="(av)" />
+                        <TextBlock FontSize="30" VerticalAlignment="Center" Text="Alphonse 22" />
+                    </StackPanel>
+                    <TextBlock TextDecorations="Underline" FontSize="20" TextWrapping="Wrap">13/02/2011 à 14h14</TextBlock>
+                    <TextBlock FontSize="20" Text="Seule annonce pour l'instant concernant WP7 : Nokia espère sortir un premier modèle sous l'OS de Microsoft cette année. 
+
+    Mais ils ne feront d'annonce produit que lorsque la date de sortie sera certaine et proche. Stephen Elop se débrouille très bien dans sa conduite du changement, malgré la force de celui-ci pour Nokia !" TextWrapping="Wrap"></TextBlock>
+
+                </StackPanel>
+            </StackPanel>
+            </ScrollViewer>
+            <Canvas Visibility="Collapsed" Height="89" HorizontalAlignment="Left" Margin="64,148,0,0" Name="premierLancementCanvas" VerticalAlignment="Top" Width="343">
+                <ProgressBar Height="23" Name="progressBar1" Width="343" IsIndeterminate="True" Canvas.Left="0" Canvas.Top="60" />
+                <TextBlock TextAlignment="Center" FontSize="35" TextWrapping="Wrap" Canvas.Left="6" Canvas.Top="6" Height="54" Name="textBlock1" Text="Lecture du sujet" Width="331" />
+            </Canvas>
+        </Grid>
+    </Grid>
+ 
+    <!--Exemple de code illustrant l'utilisation de l'ApplicationBar-->
+    <!--<phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
+            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button1.png" Text="Bouton 1"/>
+            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button2.png" Text="Bouton 2"/>
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Text="ÉlémentMenu 1"/>
+                <shell:ApplicationBarMenuItem Text="ÉlémentMenu 2"/>
+            </shell:ApplicationBar.MenuItems>
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>-->
+
+</phone:PhoneApplicationPage>

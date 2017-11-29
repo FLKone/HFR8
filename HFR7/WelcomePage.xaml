@@ -1,0 +1,456 @@
+﻿<phone:PhoneApplicationPage 
+    Name="WelcomePagePA"
+    x:Class="HFR7.WelcomePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:local="clr-namespace:HFR7"
+    xmlns:hfrclasses="clr-namespace:HFR7.HFRClasses"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    mc:Ignorable="d" d:DesignWidth="720" d:DesignHeight="1044"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneSubtleBrush}"
+    SupportedOrientations="PortraitOrLandscape"
+    Orientation="Portrait"
+    shell:SystemTray.IsVisible="True"
+    shell:SystemTray.Opacity="0.5"
+    Loaded="PhoneApplicationPage_Loaded"
+    
+    OrientationChanged="WelcomePagePA_OrientationChanged">
+    <toolkit:TransitionService.NavigationInTransition>
+        <toolkit:NavigationInTransition>
+            <toolkit:NavigationInTransition.Backward>
+                <toolkit:TurnstileTransition Mode="BackwardIn"/>
+            </toolkit:NavigationInTransition.Backward>
+            <toolkit:NavigationInTransition.Forward>
+                <toolkit:TurnstileTransition Mode="ForwardIn"/>
+            </toolkit:NavigationInTransition.Forward>
+        </toolkit:NavigationInTransition>
+    </toolkit:TransitionService.NavigationInTransition>
+    <toolkit:TransitionService.NavigationOutTransition>
+        <toolkit:NavigationOutTransition>
+            <toolkit:NavigationOutTransition.Backward>
+                <toolkit:TurnstileTransition Mode="BackwardOut"/>
+            </toolkit:NavigationOutTransition.Backward>
+            <toolkit:NavigationOutTransition.Forward>
+                <toolkit:TurnstileTransition Mode="ForwardOut"/>
+            </toolkit:NavigationOutTransition.Forward>
+        </toolkit:NavigationOutTransition>
+    </toolkit:TransitionService.NavigationOutTransition>
+    <phone:PhoneApplicationPage.Resources>
+        <!--Scénarios headers pivots-->
+        <Storyboard x:Name="quitFavHeader">
+            <DoubleAnimation Duration="0:0:0.2"
+                             From="0"
+                             To="-150"
+                             BeginTime="0:0:0"
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" 
+                             Storyboard.TargetName="favorisPivotItemHeader" />
+
+        </Storyboard>
+
+        <Storyboard x:Name="enterCatHeader">
+            <DoubleAnimation Duration="0:0:0.2"
+                             From="-150"
+                             To="0"
+                             BeginTime="0:0:0"
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" 
+                             Storyboard.TargetName="categoriePivotItemHeader" />
+        </Storyboard>
+
+        <Storyboard x:Name="quitCatHeader">
+            <DoubleAnimation Duration="0:0:0.2"
+                             From="0"
+                             To="-150"
+                             BeginTime="0:0:0"
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" 
+                             Storyboard.TargetName="categoriePivotItemHeader" />
+
+        </Storyboard>
+
+        <Storyboard x:Name="enterFavHeader">
+            <DoubleAnimation Duration="0:0:0.2"
+                             From="-150"
+                             To="0"
+                             BeginTime="0:0:0"
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" 
+                             Storyboard.TargetName="favorisPivotItemHeader" />
+        </Storyboard>
+        <!-- Converters -->
+        <hfrclasses:String2UriConverter x:Key="myString2UriConverter" />
+        <hfrclasses:MpColorConverter x:Key="myMpColorConverter" />
+        <!-- Styles -->
+        <Style x:Key="HyperlinkButtonStyle1" TargetType="HyperlinkButton">
+            <Setter Property="Foreground" Value="{StaticResource PhoneForegroundBrush}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="HyperlinkButton">
+                        <Border Background="Transparent">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="MouseOver"/>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" To="0.5" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="TextElement"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="TextElement">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneDisabledBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Border Background="{TemplateBinding Background}" Margin="{StaticResource PhoneHorizontalMargin}" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter x:Name="TextElement" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </Border>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- The template for the list header. This will scroll as a part of the list. -->
+        <DataTemplate x:Key="itemTemplateFav">
+            <StackPanel Name="topicFavItemStackPanel" Margin="3,0,0,10">
+                <toolkit:ContextMenuService.ContextMenu>
+                    <toolkit:ContextMenu IsZoomEnabled="False">
+                        <toolkit:MenuItem Header="épingler à l'écran d'accueil" Click="PinTopicClick" />
+                        <toolkit:MenuItem Header="aller à la première page" Click="GoFirstPageClick" />
+                        <toolkit:MenuItem Header="aller à la dernière page" Click="GoLastPageClick" />
+                    </toolkit:ContextMenu>
+                </toolkit:ContextMenuService.ContextMenu>
+                    <HyperlinkButton Name="topicHyperlinkButton" Click="topicHyperlinkButton_Click"  Margin="0,0,0,0" Style="{StaticResource HyperlinkButtonStyle1}" 
+                                     NavigateUri="{Binding TopicUriFav}" HorizontalAlignment="Left" 
+                                     Foreground="{StaticResource PhoneForegroundBrush}">
+                        <HyperlinkButton.Content>
+                            <StackPanel>
+                                <TextBlock Name="topicNameTextBlock" Text="{Binding TopicNameFav}" TextTrimming="WordEllipsis" FontSize="27" />
+                                <TextBlock Text="{Binding TopicLastPost}" 
+                                       Name="subtitleTopicTextBlock"
+                                       HorizontalAlignment="Left" 
+                                       Foreground="{StaticResource PhoneSubtleBrush}"
+                                       FontSize="{StaticResource PhoneFontSizeNormal}"
+                                       FontFamily="{StaticResource PhoneFontFamilyNormal}"
+                                       />
+
+                            </StackPanel>
+                        </HyperlinkButton.Content>
+                    </HyperlinkButton>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="groupHeaderTemplateFav">
+            <HyperlinkButton
+                Margin="0,0,0,1" Style="{StaticResource HyperlinkButtonStyle1}" 
+                                     HorizontalAlignment="Left" 
+                                     Foreground="{StaticResource PhoneForegroundBrush}"
+                NavigateUri="{Binding Key, Converter={StaticResource myString2UriConverter}}">
+                <HyperlinkButton.Content>
+                    <TextBlock Text="{Binding Key}" FontSize="52" 
+                       FontFamily="{StaticResource PhoneFontFamilySemiLight}" 
+                       Foreground="#ff8f0b" 
+                       VerticalAlignment="Center" />
+                </HyperlinkButton.Content>
+            </HyperlinkButton>
+        </DataTemplate>
+
+        <DataTemplate x:Key="mpTemplate">
+                <HyperlinkButton Grid.Row="0" Grid.Column="1"
+                                    Margin="15,0,0,15" Style="{StaticResource HyperlinkButtonStyle1}" 
+                                     NavigateUri="{Binding MpUri}" HorizontalAlignment="Left" 
+                                     Foreground="{StaticResource PhoneForegroundBrush}">
+                <HyperlinkButton.Content>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="350" />
+                            <ColumnDefinition Width="75" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding MpSender}" VerticalAlignment="Bottom" FontSize="42" FontFamily="{StaticResource PhoneFontFamilySemiLight}" />
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding MpLastPostText}" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="20" />
+                        <TextBlock Grid.Row="1"
+                                   Grid.Column="0"
+                                   TextWrapping="Wrap"
+                                   Grid.ColumnSpan="1"
+                                   Margin="0,-7,0,0"
+                                   Foreground="{Binding MpIsUnRead, Converter={StaticResource myMpColorConverter}}"
+                                   Text="{Binding MpTitle}" FontSize="20" />
+                    </Grid>
+                </HyperlinkButton.Content>
+            </HyperlinkButton>
+        </DataTemplate>
+
+        <DataTemplate x:Key="itemTemplateCat">
+            <StackPanel Margin="3,0,0,14">
+                <HyperlinkButton Margin="0,0,0,0" Style="{StaticResource HyperlinkButtonStyle1}" 
+                                     NavigateUri="{Binding SousCategorieUriStringCat}" HorizontalAlignment="Left" 
+                                     Foreground="{StaticResource PhoneForegroundBrush}">
+                    <HyperlinkButton.Content>
+                        <TextBlock Text="{Binding SousCategorieNameCat}" FontSize="30" />
+                    </HyperlinkButton.Content>
+                </HyperlinkButton>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="groupHeaderTemplateCat">
+            <TextBlock Text="{Binding Key}" FontSize="50" 
+                           FontFamily="{StaticResource PhoneFontFamilySemiLight}" 
+                           Foreground="#ff8f0b"
+                           Margin="12,5,0,1" VerticalAlignment="Center" />
+        </DataTemplate>
+        <Style x:Key="jumpListTemplateCat" TargetType="phone:LongListSelector">
+            <Setter Property="ItemTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Key}" 
+                       FontSize="50" 
+                       Width="700"
+                       FontFamily="{StaticResource PhoneFontFamilySemiLight}" 
+                       Foreground="#ff8f0b" 
+                       Margin="12,5,0,1" VerticalAlignment="Center" />
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!-- Animations -->
+        <Storyboard x:Name="lastFavSB">
+            <DoubleAnimation Duration="0:0:0.7"
+                             From="0"
+                             To="1"
+                             BeginTime="0:0:0"
+                             Storyboard.TargetProperty="Opacity" 
+                             Storyboard.TargetName="lastFavSP"
+                             d:IsOptimized="True">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+
+    </phone:PhoneApplicationPage.Resources>
+
+    <!--LayoutRoot est la grille racine où tout le contenu de la page est placé-->
+    <Grid x:Name="LayoutRoot" Visibility="Visible">
+        <Grid.Background>
+            <ImageBrush ImageSource="Images/Background.png" Stretch="UniformToFill" />
+        </Grid.Background>
+        <!--Contrôle Pivot -->
+        <controls:Pivot Name="welcomePivot" SelectionChanged="welcomePivot_SelectionChanged" Margin="0,0,0,0">
+
+                <!--<controls:Pivot Margin="0,-15,0,0" 
+                        Visibility="Visible" 
+                        Name="welcomePivot"
+                        Title="HFR7"
+                        SelectionChanged="welcomePivot_SelectionChanged">-->
+                <!--Élément un de tableau croisé dynamique-->
+
+                <controls:PivotItem Margin="0,-30,0,0">
+                <controls:PivotItem.Header>
+                    <StackPanel Name="logoStackPanel" Orientation="Horizontal" Margin="-4,2,0,0">
+                        <Image Source="/HFR7;component/Images/hardware.png" Margin="0,7,0,0" Width="60" Stretch="Uniform"  />
+                        <TextBlock Text="hfr" FontFamily="Segoe WP" Margin="10,0,0,0" FontSize="70" />
+                        <TextBlock Text="8" FontFamily="Segoe WP" Margin="2,0,0,0" Foreground="#ff8f0b" FontSize="70" />
+                    </StackPanel>
+                </controls:PivotItem.Header>
+                <StackPanel Height="Auto" VerticalAlignment="Top" Grid.Row="1" Margin="17,60,0,0">
+                            <!--Page récapitulative de l'user-->
+
+                        <StackPanel Name="userStackPanel" 
+                                    Visibility="Visible" 
+                                    Height="Auto" 
+                                    VerticalAlignment="Top" >
+                            <StackPanel.RenderTransform>
+                                <CompositeTransform/>
+                            </StackPanel.RenderTransform>
+                            <StackPanel Orientation="Vertical">
+                            <TextBlock Name="pseudoTextBlock"  FontFamily="Segoe WP" Text="bulldozer_fusion" HorizontalAlignment="Left" FontSize="65" Foreground="{StaticResource PhoneForegroundBrush}" Margin="-4,10,0,0" />
+                            <TextBlock Name="citationTextBlock" Visibility="Visible" Margin="0,0,0,0" Text="Lorem ipsum dolor sit" FontSize="40" VerticalAlignment="Bottom" TextWrapping="Wrap" />
+
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+                                <Button BorderBrush="Transparent" Width="250" Height="250" Padding="-15,-15,-15,-15" HorizontalAlignment="Left"  Margin="0,40,20,0">
+                                    <toolkit:ContextMenuService.ContextMenu>
+                                        <toolkit:ContextMenu IsZoomEnabled="False">
+                                            <toolkit:MenuItem Header="actualiser l'avatar" Click="UpdateAvatar" />
+                                        </toolkit:ContextMenu>
+                                    </toolkit:ContextMenuService.ContextMenu>
+                                    <Button.Content>
+                                        <Canvas Width="250" Height="250" Background="#ff8f0b">
+                                            <Image Source="Images/pasdavatar.png" Height="250" Width="250" Name="avatarImage" Stretch="UniformToFill" />
+                                        </Canvas>
+                                    </Button.Content>
+                                </Button>
+                                <StackPanel Margin="0,30,0,0" Orientation="Vertical">
+                                    <Grid Width="140" Height="150">
+                                        <Button Name="drapalTile" Click="drapalTile_Click"  BorderBrush="Transparent" Padding="-15,-15,-15,-15" Width="140" Height="140" Background="#ff8f0b" Margin="0,0,0,-10">
+                                            <Button.Content>
+                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+
+                                                    <Image Name="drapalTileImage"
+                                                     VerticalAlignment="Center" 
+                                                     HorizontalAlignment="Center" 
+                                                     Margin="10,0,0,0"
+                                                     Source="Images/tilewelcomepage/drapal.png" 
+                                                     Height="40"/>
+                                                    <TextBlock Name="favorisTileTextBlock" Foreground="White"
+                                                   Text="" Margin="3,0,0,0" 
+                                                   FontSize="50" 
+                                                   TextAlignment="Left" 
+                                                   VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </Button.Content>
+                                        </Button>
+                                    </Grid>
+                                    <Grid Margin="0,0,0,0" Width="140" Height="140">
+                                        <Button Name="mpTileButton" Click="mpTileButton_Click" BorderBrush="Transparent" Padding="-20,-15,-15,-15" Width="140" Height="140" Background="#ff8f0b">
+                                            <Button.Content>
+                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <Image Name="mpTileImage" 
+                                                       VerticalAlignment="Center"
+                                                       HorizontalAlignment="Center"
+                                                     Margin="10,0,0,0"
+                                                       Source="Images/tilewelcomepage/mp.png" 
+                                                       Width="40" />
+                                                    <TextBlock Name="mpTileTextBlock" Foreground="White"
+                                               Text="" Margin="3,0,0,0" 
+                                               FontSize="50" 
+                                               TextAlignment="Left" 
+                                               VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </Button.Content>
+                                        </Button>
+                                    </Grid>
+                                </StackPanel>
+
+                            </StackPanel>
+                            <!--<StackPanel Margin="0,-15,0,0" Orientation="Horizontal">
+                                <Grid Margin="-15,20,0,0" Width="140" Height="140" HorizontalAlignment="Left">
+                                    <Button Name="hfrRehostTileButton"  Click="hfrRehostTileButton_Click_1" BorderBrush="Transparent" Padding="0" Width="140" Height="140" Background="#ff8f0b">
+                                    <Button.Content>
+                                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                            <TextBlock Foreground="#FFE2E2E2"
+                                               Text="hfr" Margin="0,0,0,0" 
+                                               FontSize="30"
+                                                       FontFamily="Trebuchet MS"
+                                               TextAlignment="Left" 
+                                               VerticalAlignment="Center" />
+                                            <TextBlock Foreground="White"
+                                               Text="Rehost" Margin="0,0,0,0" 
+                                               FontSize="30"
+                                                       FontFamily="Trebuchet MS"
+                                               TextAlignment="Left" 
+                                               VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </Button.Content>
+                                </Button>
+                            </Grid>
+                                <Grid Margin="0,20,0,0" Width="140" Height="140" HorizontalAlignment="Left">
+                                    <Button Name="wikiSmileysTileButton"  Click="hfrRehostTileButton_Click_1" BorderBrush="Transparent" Padding="0" Width="140" Height="140" Background="#ff8f0b">
+                                    <Button.Content>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <Image Source="Images/ImagesTopics/redfacecircle.png" Margin="0,0,0,0" Width="70" Stretch="Uniform"  />
+                                            </StackPanel>
+                                    </Button.Content>
+                                </Button>
+                            </Grid>
+                            </StackPanel>-->
+                        </StackPanel>
+                            
+                        </StackPanel>
+                    <!--<Button Content="faire un don" Name="donateButton" Click="donateButton_Click_1" Width="360" Margin="-12,0,0,0" />-->
+                    <!--<TextBlock Text="version Gold" Margin="0,10,0,0" FontSize="35" >
+                        <TextBlock.Foreground>
+                            <RadialGradientBrush>
+                                <GradientStop Color="#FFEC9805" Offset="1"/>
+                                <GradientStop Color="#FFFFC500"/>
+                            </RadialGradientBrush>
+                        </TextBlock.Foreground>
+                    </TextBlock>-->
+                    <!--<TextBlock Text="lol" />-->
+                </StackPanel>
+            </controls:PivotItem >
+
+                <!--Élément deux de tableau croisé dynamique-->
+            <controls:PivotItem Name="favorisPivotItem" Margin="0,0,0,0">
+                <controls:PivotItem.Header>
+                    <TextBlock FontSize="70" Name="favorisPivotItemHeader" Text="favoris" >
+                        <TextBlock.RenderTransform>
+                    <CompositeTransform />
+                        </TextBlock.RenderTransform>
+                    </TextBlock>
+                </controls:PivotItem.Header>
+                        <phone:LongListSelector 
+                            Margin="0,-150,0,0"
+                            x:Name="favTopics" Background="Transparent" 
+                                            ItemTemplate="{StaticResource itemTemplateFav}"
+                                            GroupHeaderTemplate="{StaticResource groupHeaderTemplateFav}"
+                                                LayoutMode="List"
+                                                HideEmptyGroups ="true" 
+                                                IsGroupingEnabled="true"
+                            ManipulationStateChanged="favTopics_ManipulationStateChanged_1">
+                        </phone:LongListSelector>
+            </controls:PivotItem >
+            <controls:PivotItem Margin="0,0,0,0">
+                <controls:PivotItem.Header>
+                    <TextBlock FontSize="70" Name="categoriePivotItemHeader" Text="catégories" >
+                        <TextBlock.RenderTransform>
+                            <CompositeTransform />
+                        </TextBlock.RenderTransform>
+                    </TextBlock>
+                </controls:PivotItem.Header>
+                    <phone:LongListSelector x:Name="categoriesGroup" 
+                                            ItemTemplate="{StaticResource itemTemplateCat}"
+                                            GroupHeaderTemplate="{StaticResource groupHeaderTemplateCat}"
+                                            JumpListStyle="{StaticResource jumpListTemplateCat}"
+                                            ManipulationStateChanged="categoriesGroup_ManipulationStateChanged_1"
+                                            Margin="0,-150,0,0"
+                                            LayoutMode="List"
+                                            HideEmptyGroups ="true" 
+                                            IsGroupingEnabled="true" />
+            </controls:PivotItem>
+
+            <controls:PivotItem>
+                <controls:PivotItem.Header>
+                    <TextBlock FontSize="70" Name="messageriePivotItemHeader" Text="messagerie" >
+                        <TextBlock.RenderTransform>
+                            <CompositeTransform />
+                        </TextBlock.RenderTransform>
+                    </TextBlock>
+                </controls:PivotItem.Header>
+                <ListBox Name="mpListBox"
+                                     ItemTemplate="{StaticResource mpTemplate}"
+                                     Margin="-12,-25,0,0"
+                                     />
+
+            </controls:PivotItem>
+        </controls:Pivot>
+    </Grid>
+
+
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar x:Name="applicationBar" IsVisible="True" IsMenuEnabled="True">
+            <shell:ApplicationBarIconButton x:Name="appbar_refresh" IconUri="/Images/ImagesTopics/refresh.png" Text="rafraîchir" Click="appbar_refresh_Click" />
+            <shell:ApplicationBarIconButton x:Name="appbar_newmp" IsEnabled="True" IconUri="/Images/ImagesTopics/newmp.png" Text="nouveau MP" Click="appbar_new_mp_Click" />
+
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem x:Name="settingsMenu" Text="réglages" Click="appbar_settings_Click"/>
+                <shell:ApplicationBarMenuItem x:Name="deconnexionMenu" Text="déconnexion" Click="deconnexionMenu_Click"/>
+                <shell:ApplicationBarMenuItem x:Name="aboutMenu" Text="à propos + changelog" Click="aboutMenu_Click"/>
+                <shell:ApplicationBarMenuItem x:Name="donateMenu" Text="faire un don" Click="donateButton_Click_1"/>
+            </shell:ApplicationBar.MenuItems>
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
+
+</phone:PhoneApplicationPage>

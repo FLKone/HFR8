@@ -1,0 +1,24 @@
+D:\Documents\Visual Studio 2010\Projects\HFR7\7.1\HFR7ScheduledAgent\Bin\Debug\HFR7ScheduledAgent.dll
+D:\Documents\Visual Studio 2010\Projects\HFR7\7.1\HFR7ScheduledAgent\Bin\Debug\HFR7ScheduledAgent.pdb
+D:\Documents\Visual Studio 2010\Projects\HFR7\7.1\HFR7ScheduledAgent\obj\Debug\HFR7ScheduledAgent.dll
+D:\Documents\Visual Studio 2010\Projects\HFR7\7.1\HFR7ScheduledAgent\obj\Debug\HFR7ScheduledAgent.pdb
+D:\Documents\Visual Studio 2010\Projects\HFR7\7.1\HFR7ScheduledAgent\obj\Debug\HFR7ScheduledAgent.csprojResolveAssemblyReference.cache
+D:\Documents\Visual Studio 2010\Projects\HFR7\7.1 - backup\HFR7ScheduledAgent\Bin\Debug\HFR7ScheduledAgent.dll
+D:\Documents\Visual Studio 2010\Projects\HFR7\7.1 - backup\HFR7ScheduledAgent\Bin\Debug\HFR7ScheduledAgent.pdb
+D:\Documents\Visual Studio 2010\Projects\HFR7\7.1 - backup\HFR7ScheduledAgent\obj\Debug\HFR7ScheduledAgent.csprojResolveAssemblyReference.cache
+D:\Documents\Visual Studio 2010\Projects\HFR7\7.1 - backup\HFR7ScheduledAgent\obj\Debug\HFR7ScheduledAgent.dll
+D:\Documents\Visual Studio 2010\Projects\HFR7\7.1 - backup\HFR7ScheduledAgent\obj\Debug\HFR7ScheduledAgent.pdb
+D:\Documents\Visual Studio 2010\Projects\HFR8\HFR7ScheduledAgent\Bin\Debug\HFR7ScheduledAgent.dll
+D:\Documents\Visual Studio 2010\Projects\HFR8\HFR7ScheduledAgent\Bin\Debug\HFR7ScheduledAgent.pdb
+D:\Documents\Visual Studio 2010\Projects\HFR8\HFR7ScheduledAgent\obj\Debug\HFR7ScheduledAgent.csprojResolveAssemblyReference.cache
+D:\Documents\Visual Studio 2010\Projects\HFR8\HFR7ScheduledAgent\obj\Debug\HFR7ScheduledAgent.dll
+D:\Documents\Visual Studio 2010\Projects\HFR8\HFR7ScheduledAgent\obj\Debug\HFR7ScheduledAgent.pdb
+C:\Users\grego_000\Documents\Visual Studio 2012\Projects\HFR8\HFR7ScheduledAgent\Bin\Debug\HFR7ScheduledAgent.dll
+C:\Users\grego_000\Documents\Visual Studio 2012\Projects\HFR8\HFR7ScheduledAgent\Bin\Debug\HFR7ScheduledAgent.pdb
+C:\Users\grego_000\Documents\Visual Studio 2012\Projects\HFR8\HFR7ScheduledAgent\obj\Debug\HFR7ScheduledAgent.csprojResolveAssemblyReference.cache
+C:\Users\grego_000\Documents\Visual Studio 2012\Projects\HFR8\HFR7ScheduledAgent\obj\Debug\HFR7ScheduledAgent.dll
+C:\Users\grego_000\Documents\Visual Studio 2012\Projects\HFR8\HFR7ScheduledAgent\obj\Debug\HFR7ScheduledAgent.pdb
+Z:\Desktop\Projects\HFR8\HFR7ScheduledAgent\Bin\Debug\HFR7ScheduledAgent.dll
+Z:\Desktop\Projects\HFR8\HFR7ScheduledAgent\Bin\Debug\HFR7ScheduledAgent.pdb
+Z:\Desktop\Projects\HFR8\HFR7ScheduledAgent\obj\Debug\HFR7ScheduledAgent.dll
+Z:\Desktop\Projects\HFR8\HFR7ScheduledAgent\obj\Debug\HFR7ScheduledAgent.pdb
