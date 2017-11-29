@@ -117,7 +117,7 @@ namespace HFR7
                     List<Cookie> listCookies = store["listHFRcookies"] as List<Cookie>;
                     foreach (Cookie c in listCookies)
                     {
-                        container.Add(new Uri("http://forum.hardware.fr", UriKind.Absolute), c);
+                        container.Add(new Uri("https://forum.hardware.fr", UriKind.Absolute), c);
                     }
                     store.Remove("HFRcookies");
                     store.Add("HFRcookies", container);
@@ -141,7 +141,7 @@ namespace HFR7
             //CHARGEMENT DES DRAPAUX
             //=====================
             drapObject.Clear();
-            string urlDrap = "http://forum.hardware.fr/forum1.php?cat=" + idCat + "&owntopic=1";
+            string urlDrap = "https://forum.hardware.fr/forum1.php?cat=" + idCat + "&owntopic=1";
             HtmlWeb.LoadAsync(urlDrap, container, (s, args) =>
             {
                 if (args.Error != null)
@@ -301,8 +301,8 @@ namespace HFR7
             //else if (!cacheTopic)
             //{
             //if (isoStore.FileExists("topics" + souscatUriShort + ".xml")) isoStore.DeleteFile("topics" + souscatUriShort + ".xml");
-            //string uriTopicsList = "http://forum.hardware.fr/forum1.php?cat=" + idCat+ "&subcat=" + souscatName + "&page=" + listPageNumber;
-            string uriTopicsList = "http://forum.hardware.fr" + souscatUri;
+            //string uriTopicsList = "https://forum.hardware.fr/forum1.php?cat=" + idCat+ "&subcat=" + souscatName + "&page=" + listPageNumber;
+            string uriTopicsList = "https://forum.hardware.fr" + souscatUri;
             //string uriTopicsList = "http://www.scrubs-fr.net/perso/hfr7/cat0/catzero.htm";
 
             HtmlWeb.LoadAsync(uriTopicsList, container, (s, args) =>

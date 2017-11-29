@@ -22,3 +22,7 @@ Z:\Desktop\Projects\HFR8\HFR7ScheduledAgent\Bin\Debug\HFR7ScheduledAgent.dll
 Z:\Desktop\Projects\HFR8\HFR7ScheduledAgent\Bin\Debug\HFR7ScheduledAgent.pdb
 Z:\Desktop\Projects\HFR8\HFR7ScheduledAgent\obj\Debug\HFR7ScheduledAgent.dll
 Z:\Desktop\Projects\HFR8\HFR7ScheduledAgent\obj\Debug\HFR7ScheduledAgent.pdb
+C:\Users\User\Documents\GitHub\HFR8\HFR7ScheduledAgent\Bin\Debug\HFR7ScheduledAgent.dll
+C:\Users\User\Documents\GitHub\HFR8\HFR7ScheduledAgent\Bin\Debug\HFR7ScheduledAgent.pdb
+C:\Users\User\Documents\GitHub\HFR8\HFR7ScheduledAgent\obj\Debug\HFR7ScheduledAgent.dll
+C:\Users\User\Documents\GitHub\HFR8\HFR7ScheduledAgent\obj\Debug\HFR7ScheduledAgent.pdb

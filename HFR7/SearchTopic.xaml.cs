@@ -164,7 +164,7 @@ namespace HFR7
                 List<Cookie> listCookies = store["listHFRcookies"] as List<Cookie>;
                 foreach (Cookie c in listCookies)
                 {
-                    container.Add(new Uri("http://forum.hardware.fr", UriKind.Absolute), c);
+                    container.Add(new Uri("https://forum.hardware.fr", UriKind.Absolute), c);
                 }
                 store.Remove("HFRcookies");
                 store.Add("HFRcookies", container);
@@ -175,7 +175,7 @@ namespace HFR7
                 List<Cookie> listCookiesDummy = store["listHFRcookiesDummy"] as List<Cookie>;
                 foreach (Cookie c in listCookiesDummy)
                 {
-                    containerDummy.Add(new Uri("http://forum.hardware.fr", UriKind.Absolute), c);
+                    containerDummy.Add(new Uri("https://forum.hardware.fr", UriKind.Absolute), c);
                 }
                 store.Remove("HFRcookiesDummy");
                 store.Add("HFRcookiesDummy", containerDummy);
@@ -230,7 +230,7 @@ namespace HFR7
             //forum.hardware.fr/forum2.php?post=1197&cat=25&spseudo=Poogz&filter=1
 
             // Construction de URL du topic
-            string urlTopic = "http://forum.hardware.fr/forum2.php?config=hfr.inc&cat=" + idCatParse + "&post=" + idTopicParse + "&spseudo=" + searchPseudo + "&word=" + searchWord + "&filter=1&random=" + randomNumber.ToString();
+            string urlTopic = "https://forum.hardware.fr/forum2.php?config=hfr.inc&cat=" + idCatParse + "&post=" + idTopicParse + "&spseudo=" + searchPseudo + "&word=" + searchWord + "&filter=1&random=" + randomNumber.ToString();
             //string urlTopic = "http://www.scrubs-fr.net/perso/modopb.html";
             // Récupération et parsage de l'HTML du topic sur HFR
             HtmlWeb.LoadAsync(urlTopic, containerParse, (s, args) =>

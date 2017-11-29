@@ -74,7 +74,7 @@ namespace HFR7
                 List<Cookie> listCookies = store["listHFRcookies"] as List<Cookie>;
                 foreach (Cookie c in listCookies)
                 {
-                    container.Add(new Uri("http://forum.hardware.fr", UriKind.Absolute), c);
+                    container.Add(new Uri("https://forum.hardware.fr", UriKind.Absolute), c);
                 }
                 store.Remove("HFRcookies");
                 store.Add("HFRcookies", container);
@@ -158,9 +158,9 @@ namespace HFR7
             docTopic = XDocument.Load("MP_HTMLfile_" + currentTheme + ".html");
 
             // Construction de URL du MP
-            //http://forum.hardware.fr/forum2.php?cat=prive&post=1705945&page=1
-            string urlMp = "http://forum.hardware.fr/forum2.php?config=hfr.inc&cat=prive&post=" + mpId + "&page=" + numberOfPages + "&random=" + randomNumber.ToString();
-            //string urlMp = "http://forum.hardware.fr/forum2.php?config=hfr.inc&cat=prive&post=1633240&page=1&random=" + randomNumber.ToString();
+            //https://forum.hardware.fr/forum2.php?cat=prive&post=1705945&page=1
+            string urlMp = "https://forum.hardware.fr/forum2.php?config=hfr.inc&cat=prive&post=" + mpId + "&page=" + numberOfPages + "&random=" + randomNumber.ToString();
+            //string urlMp = "https://forum.hardware.fr/forum2.php?config=hfr.inc&cat=prive&post=1633240&page=1&random=" + randomNumber.ToString();
 
             // Récupération et parsage de l'HTML du MP sur HFR
             HtmlWeb.LoadAsync(urlMp, container, (s, args) =>
@@ -367,7 +367,7 @@ namespace HFR7
             answer = HttpUtility.UrlEncode(answer);
 
             // Création de l'objet HttpWebRequest.
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://forum.hardware.fr/bddpost.php");
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://forum.hardware.fr/bddpost.php");
 
             // ContentType
             request.ContentType = "application/x-www-form-urlencoded";

@@ -72,7 +72,7 @@ namespace HFR7
                 List<Cookie> listCookies = store["listHFRcookies"] as List<Cookie>;
                 foreach (Cookie c in listCookies)
                 {
-                    container.Add(new Uri("http://forum.hardware.fr", UriKind.Absolute), c);
+                    container.Add(new Uri("https://forum.hardware.fr", UriKind.Absolute), c);
                 }
                 store.Remove("HFRcookies");
                 store.Add("HFRcookies", container);
@@ -183,7 +183,7 @@ namespace HFR7
                 progressBar.Visibility = System.Windows.Visibility.Visible;
 
                 // On cherche la quote
-                string urlQuote = "http://forum.hardware.fr/message.php?config=hfr.inc&cat=" + idCat + "&post=" + idTopic + "&numrep=" + numRep;
+                string urlQuote = "https://forum.hardware.fr/message.php?config=hfr.inc&cat=" + idCat + "&post=" + idTopic + "&numrep=" + numRep;
                 HtmlWeb.LoadAsync(urlQuote, container, (s, args) =>
                     {
                         Dispatcher.BeginInvoke(() => progressBar.Visibility = System.Windows.Visibility.Visible);
@@ -266,7 +266,7 @@ namespace HFR7
 
                 // On cherche le post à éditer
                 NavigationContext.QueryString.TryGetValue("numrep", out numRep);
-                string urlEdit = "http://forum.hardware.fr/message.php?config=hfr.inc&cat=" + idCat + "&post=" + idTopic + "&numreponse=" + numRep;
+                string urlEdit = "https://forum.hardware.fr/message.php?config=hfr.inc&cat=" + idCat + "&post=" + idTopic + "&numreponse=" + numRep;
                 HtmlWeb.LoadAsync(urlEdit, container, (s, args) =>
                 {
                     Dispatcher.BeginInvoke(() => progressBar.Visibility = System.Windows.Visibility.Visible);
@@ -347,7 +347,7 @@ namespace HFR7
 
 
             // Création de l'objet HttpWebRequest.
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://forum.hardware.fr/bddpost.php");
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://forum.hardware.fr/bddpost.php");
 
             // ContentType
             request.ContentType = "application/x-www-form-urlencoded";
@@ -387,7 +387,7 @@ namespace HFR7
             answer = HttpUtility.UrlEncode(answer);
 
             // Création de l'objet HttpWebRequest.
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://forum.hardware.fr/bdd.php");
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://forum.hardware.fr/bdd.php");
 
             // ContentType
             request.ContentType = "application/x-www-form-urlencoded";
@@ -485,7 +485,7 @@ namespace HFR7
             progressBar.Visibility = System.Windows.Visibility.Visible;
 
             // Création de l'objet HttpWebRequest.
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://forum.hardware.fr/bdd.php");
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://forum.hardware.fr/bdd.php");
 
             // ContentType
             request.ContentType = "application/x-www-form-urlencoded";

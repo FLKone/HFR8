@@ -1,0 +1,20 @@
+﻿<Deployment xmlns="http://schemas.microsoft.com/client/2007/deployment" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" EntryPointAssembly="HFR7" EntryPointType="HFR7.App" RuntimeVersion="4.7.50308.0">
+  <Deployment.Parts>
+    <AssemblyPart x:Name="HFR7" Source="HFR7.dll" />
+    <AssemblyPart x:Name="HFR7ScheduledAgent" Source="HFR7ScheduledAgent.dll" />
+    <AssemblyPart x:Name="ICSharpCode.SharpZLib.Phone" Source="ICSharpCode.SharpZLib.Phone.dll" />
+    <AssemblyPart x:Name="ImageTools.Controls" Source="ImageTools.Controls.dll" />
+    <AssemblyPart x:Name="ImageTools" Source="ImageTools.dll" />
+    <AssemblyPart x:Name="ImageTools.Filtering" Source="ImageTools.Filtering.dll" />
+    <AssemblyPart x:Name="ImageTools.IO.Bmp" Source="ImageTools.IO.Bmp.dll" />
+    <AssemblyPart x:Name="ImageTools.IO.Gif" Source="ImageTools.IO.Gif.dll" />
+    <AssemblyPart x:Name="ImageTools.IO.Png" Source="ImageTools.IO.Png.dll" />
+    <AssemblyPart x:Name="ImageTools.Utils" Source="ImageTools.Utils.dll" />
+    <AssemblyPart x:Name="Jayway.Controls" Source="Jayway.Controls.dll" />
+    <AssemblyPart x:Name="Microsoft.Phone.Controls" Source="Microsoft.Phone.Controls.dll" />
+    <AssemblyPart x:Name="Microsoft.Phone.Controls.Toolkit" Source="Microsoft.Phone.Controls.Toolkit.dll" />
+    <AssemblyPart x:Name="PhoneCodeContractsAssemblies" Source="PhoneCodeContractsAssemblies.dll" />
+    <AssemblyPart x:Name="PhonePerformance" Source="PhonePerformance.dll" />
+    <AssemblyPart x:Name="SharpZipLib.WindowsPhone7" Source="SharpZipLib.WindowsPhone7.dll" />
+  </Deployment.Parts>
+</Deployment>

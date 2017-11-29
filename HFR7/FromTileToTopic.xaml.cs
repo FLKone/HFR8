@@ -77,7 +77,7 @@ namespace HFR7
                 List<Cookie> listCookies = store["listHFRcookies"] as List<Cookie>;
                 foreach (Cookie c in listCookies)
                 {
-                    container.Add(new Uri("http://forum.hardware.fr", UriKind.Absolute), c);
+                    container.Add(new Uri("https://forum.hardware.fr", UriKind.Absolute), c);
                 }
                 store.Remove("HFRcookies");
                 store.Add("HFRcookies", container);
@@ -94,7 +94,7 @@ namespace HFR7
         {
             // Affichage favoris
             favObject.Clear();
-            string urlFav = "http://forum.hardware.fr/forum1f.php?owntopic=" + (string)store["favorisType"];
+            string urlFav = "https://forum.hardware.fr/forum1f.php?owntopic=" + (string)store["favorisType"];
             HtmlWeb.LoadAsync(urlFav, container as CookieContainer, (s, args) =>
             {
                 if (args.Error != null)

@@ -144,7 +144,7 @@ namespace HFR7
             connectButton.IsEnabled = false;
 
             // Création de l'objet HttpWebRequest.
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://forum.hardware.fr/login_validation.php?config=hfr.inc");
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://forum.hardware.fr/login_validation.php?config=hfr.inc");
 
             request.ContentType = "application/x-www-form-urlencoded";
 
@@ -158,7 +158,7 @@ namespace HFR7
             request.Headers["Set-Cookie"] = "name=value";
 
 
-            container.Add(new Uri("http://forum.hardware.fr/"), new Cookie("name", "value"));
+            container.Add(new Uri("https://forum.hardware.fr/"), new Cookie("name", "value"));
             request.CookieContainer = container;
 
             // Démarrage de l'opération asynchrone
@@ -233,7 +233,7 @@ namespace HFR7
                     foreach (Cookie c in listCookies)
                     {
                         c.Expires = new DateTime(2999, 12, 31);
-                        container.Add(new Uri("http://forum.hardware.fr", UriKind.Absolute), c);
+                        container.Add(new Uri("https://forum.hardware.fr", UriKind.Absolute), c);
                     }
                     store.Remove("HFRcookies");
                     store.Add("HFRcookies", container);
@@ -258,7 +258,7 @@ namespace HFR7
         private void StartDummyCookie()
         {
             // Création de l'objet HttpWebRequest.
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://forum.hardware.fr/login_validation.php?config=hfr.inc");
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://forum.hardware.fr/login_validation.php?config=hfr.inc");
 
             request.ContentType = "application/x-www-form-urlencoded";
 
@@ -272,7 +272,7 @@ namespace HFR7
             request.Headers["Set-Cookie"] = "name=value";
 
 
-            containerDummy.Add(new Uri("http://forum.hardware.fr/"), new Cookie("name", "value"));
+            containerDummy.Add(new Uri("https://forum.hardware.fr/"), new Cookie("name", "value"));
             request.CookieContainer = containerDummy;
 
             // Démarrage de l'opération asynchrone
@@ -338,7 +338,7 @@ namespace HFR7
                         foreach (Cookie c in listCookiesDummy)
                         {
                             c.Expires = new DateTime(2999, 12, 31);
-                            containerDummy.Add(new Uri("http://forum.hardware.fr", UriKind.Absolute), c);
+                            containerDummy.Add(new Uri("https://forum.hardware.fr", UriKind.Absolute), c);
                         }
                         store.Remove("HFRcookiesDummy");
                         store.Add("HFRcookiesDummy", containerDummy);
@@ -368,7 +368,7 @@ namespace HFR7
             AppSettings.CheckAndAdd(currentVersion);
 
             // Id utilisateur + Url avatar
-            HtmlWeb.LoadAsync("http://forum.hardware.fr/", container, (s, args) =>
+            HtmlWeb.LoadAsync("https://forum.hardware.fr/", container, (s, args) =>
             {
                 if (args.Document == null)
                 {
@@ -381,7 +381,7 @@ namespace HFR7
                     store.Add("userId", Convert.ToInt32(userIdArray[0].Split('=')[1].Split('&')[0]));
                 }
 
-                HtmlWeb.LoadAsync("http://forum.hardware.fr/user/editprofil.php?config=hfr.inc&page=2", container, (t, argt) =>
+                HtmlWeb.LoadAsync("https://forum.hardware.fr/user/editprofil.php?config=hfr.inc&page=2", container, (t, argt) =>
                 {
                     if (argt.Document == null)
                     {
@@ -396,7 +396,7 @@ namespace HFR7
                     }
 
 
-                    HtmlWeb.LoadAsync("http://forum.hardware.fr/user/editprofil.php?config=hfr.inc&page=5", container, (u, argu) =>
+                    HtmlWeb.LoadAsync("https://forum.hardware.fr/user/editprofil.php?config=hfr.inc&page=5", container, (u, argu) =>
                     {
                         if (argu.Document == null)
                         {

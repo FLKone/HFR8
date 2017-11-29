@@ -261,7 +261,7 @@ namespace HFR7
                         List<Cookie> listCookies = store["listHFRcookies"] as List<Cookie>;
                         foreach (Cookie c in listCookies)
                         {
-                            container.Add(new Uri("http://forum.hardware.fr", UriKind.Absolute), c);
+                            container.Add(new Uri("https://forum.hardware.fr", UriKind.Absolute), c);
                         }
                         store.Remove("HFRcookies");
                         store.Add("HFRcookies", container);
@@ -270,7 +270,7 @@ namespace HFR7
                         List<Cookie> listCookiesDummy = store["listHFRcookiesDummy"] as List<Cookie>;
                         foreach (Cookie c in listCookiesDummy)
                         {
-                            containerDummy.Add(new Uri("http://forum.hardware.fr", UriKind.Absolute), c);
+                            containerDummy.Add(new Uri("https://forum.hardware.fr", UriKind.Absolute), c);
                         }
                         store.Remove("HFRcookiesDummy");
                         store.Add("HFRcookiesDummy", containerDummy);
@@ -352,7 +352,7 @@ namespace HFR7
                 //globalTextblock.Text = "Réception des favoris...";
                 ApplicationBar.IsVisible = true;
             });
-            string urlFav = "http://forum.hardware.fr/forum1f.php?owntopic=" + (string)store["favorisType"];
+            string urlFav = "https://forum.hardware.fr/forum1f.php?owntopic=" + (string)store["favorisType"];
             //string urlFav = "http://www.scrubs-fr.net/perso/hfr7/cat0/fav.htm";
             HtmlWeb.LoadAsync(urlFav, store["HFRcookies"] as CookieContainer, (s, args) =>
             {
@@ -621,8 +621,8 @@ namespace HFR7
                     SystemTray.ProgressIndicator.IsVisible = true;
                     SystemTray.ProgressIndicator.Text = "Chargement des messages privés...";
                 });
-                //http://forum.hardware.fr/forum1.php?config=hfr.inc&cat=prive&page=1
-                string urlMp = "http://forum.hardware.fr/forum1.php?cat=prive&page=1";
+                //https://forum.hardware.fr/forum1.php?config=hfr.inc&cat=prive&page=1
+                string urlMp = "https://forum.hardware.fr/forum1.php?cat=prive&page=1";
                 HtmlWeb.LoadAsync(urlMp, store["HFRcookies"] as CookieContainer, (s, args) =>
                 {
                     if (args.Error != null)
@@ -808,7 +808,7 @@ namespace HFR7
 
                 //Chargement des catégories vers l'objet + hash
                 //HtmlWeb.LoadAsync("http://www.scrubs-fr.net/perso/hfr7/cat0/home.htm", container, (s, args) =>
-                HtmlWeb.LoadAsync("http://forum.hardware.fr/", container, (s, args) =>
+                HtmlWeb.LoadAsync("https://forum.hardware.fr/", container, (s, args) =>
                 {
                     if (args.Document == null)
                     {

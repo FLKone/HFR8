@@ -101,7 +101,7 @@ namespace HFR7
 
                 globalProgressBar.Visibility = System.Windows.Visibility.Visible;
                 // Lancement de la recherche
-                HtmlWeb.LoadAsync("http://forum.hardware.fr/wikismilies.php?config=hfr.inc&threecol=0", null, new string[] { "findcode=", "findkeyword=" + keyword }, (s, args) =>
+                HtmlWeb.LoadAsync("https://forum.hardware.fr/wikismilies.php?config=hfr.inc&threecol=0", null, new string[] { "findcode=", "findkeyword=" + keyword }, (s, args) =>
                     {
                         string[] smileyUrl = args.Document.DocumentNode.Descendants("img").Where(x => (bool)x.GetAttributeValue("title", "").Contains("[:") == true).
                                                     Select(y => y.GetAttributeValue("src", "")).ToArray();

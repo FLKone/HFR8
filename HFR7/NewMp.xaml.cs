@@ -42,7 +42,7 @@ namespace HFR7
                 List<Cookie> listCookies = store["listHFRcookies"] as List<Cookie>;
                 foreach (Cookie c in listCookies)
                 {
-                    container.Add(new Uri("http://forum.hardware.fr", UriKind.Absolute), c);
+                    container.Add(new Uri("https://forum.hardware.fr", UriKind.Absolute), c);
                 }
                 store.Remove("HFRcookies");
                 store.Add("HFRcookies", container);
@@ -92,7 +92,7 @@ namespace HFR7
                 sujetMp = HttpUtility.UrlEncode(sujetTextBox.Text);
 
                 // Création de l'objet HttpWebRequest.
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://forum.hardware.fr/bddpost.php");
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://forum.hardware.fr/bddpost.php");
 
                 // ContentType
                 request.ContentType = "application/x-www-form-urlencoded";
